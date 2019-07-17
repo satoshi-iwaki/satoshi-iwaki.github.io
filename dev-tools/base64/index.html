@@ -16,33 +16,44 @@
     <title>Base64 encoder and decoder</title>
   </head>
   <body>
-    <h1>Base64 encoder and decoder</h1>
     <div class="container-fluid">
-      <h2>Base64 encoder</h2>
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">Plain text:</label>
-        <textarea class="form-control" id="base64EncoderInput" rows="3"></textarea>
-      </div>
-      <div class="text-right">
-        <button type="button" class="btn btn-primary" onclick="base64Encode()">Base64 encode</button>
-      </div>
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">Base64 encoded:</label>
-        <textarea class="form-control" id="base64EncoderOutput" rows="3"></textarea>
-      </div>
-
-      <hr>
-      <h2>Base64 decoder</h2>
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">Base64 encoded:</label>
-        <textarea class="form-control" id="base64DecoderInput" rows="3"></textarea>
-      </div>
-      <div class="text-right">
-        <button type="button" class="btn btn-primary" onclick="base64Dencode()">Base64 decode</button>
-      </div>
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">Plain text:</label>
-        <textarea class="form-control" id="base64DecoderOutput" rows="3"></textarea>
+    <h1>Base64 encoder and decoder</h1>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="base64encoder-tab" data-toggle="tab" href="#base64encoder" role="tab" aria-controls="base64 encoder" aria-selected="true">Base64 encoder</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="base64decoder-tab" data-toggle="tab" href="#base64decoder" role="tab" aria-controls="base64 decoder" aria-selected="false">Base64 decoder</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="base64encoder" role="tabpanel" aria-labelledby="base64encoder-tab">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Plain text:</label>
+              <textarea class="form-control" id="base64EncoderInput" rows="3"></textarea>
+            </div>
+            <div class="text-right">
+              <button type="button" class="btn btn-primary" onclick="base64Encode()">Base64 encode</button>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Base64 encoded:</label>
+              <textarea class="form-control" id="base64EncoderOutput" rows="3"></textarea>
+            </div>
+      
+        </div>
+        <div class="tab-pane fade" id="base64decoder" role="tabpanel" aria-labelledby="base64decoder-tab">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Base64 encoded:</label>
+              <textarea class="form-control" id="base64DecoderInput" rows="3"></textarea>
+            </div>
+            <div class="text-right">
+              <button type="button" class="btn btn-primary" onclick="base64Dencode()">Base64 decode</button>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Plain text:</label>
+              <textarea class="form-control" id="base64DecoderOutput" rows="3"></textarea>
+            </div>
+        </div>
       </div>
     </div>
     <script>
@@ -54,7 +65,6 @@
             return decodeURIComponent(escape(atob(base64Encoded)));
         }
       };
-
       function base64Encode() {
         var plainText = document.getElementById('base64EncoderInput').value;
         if (plainText.length == 0) {
@@ -71,7 +81,7 @@
       }
     </script>
 
-0    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
