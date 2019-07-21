@@ -29,28 +29,36 @@
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="base64encoder" role="tabpanel" aria-labelledby="base64encoder-tab">
             <div class="form-group">
-              <label for="exampleFormControlTextarea1">Plain text:</label>
+              <label for="base64EncoderInput">Plain text:</label>
               <textarea class="form-control" id="base64EncoderInput" rows="3"></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="urlEncode">
+              <label class="form-check-label" for="urlEncode">URL and filename safe alphabet (<a href="https://tools.ietf.org/html/rfc4648#section-5">RFC 4648 section 5</a>)</label>
             </div>
             <div class="text-right">
               <button type="button" class="btn btn-primary" onclick="base64Encode()">Base64 encode</button>
             </div>
             <div class="form-group">
-              <label for="exampleFormControlTextarea1">Base64 encoded:</label>
+              <label for="base64EncoderOutput">Base64 encoded:</label>
               <textarea class="form-control" id="base64EncoderOutput" rows="3"></textarea>
             </div>
       
         </div>
         <div class="tab-pane fade" id="base64decoder" role="tabpanel" aria-labelledby="base64decoder-tab">
             <div class="form-group">
-              <label for="exampleFormControlTextarea1">Base64 encoded:</label>
+              <label for="base64DecoderInput">Base64 encoded:</label>
               <textarea class="form-control" id="base64DecoderInput" rows="3"></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="urlDecode">
+              <label class="form-check-label" for="urlDecode">URL and filename safe alphabet (<a href="https://tools.ietf.org/html/rfc4648#section-5">RFC 4648 section 5</a>)</label>
             </div>
             <div class="text-right">
               <button type="button" class="btn btn-primary" onclick="base64Dencode()">Base64 decode</button>
             </div>
             <div class="form-group">
-              <label for="exampleFormControlTextarea1">Plain text:</label>
+              <label for="base64DecoderOutput">Plain text:</label>
               <textarea class="form-control" id="base64DecoderOutput" rows="3"></textarea>
             </div>
         </div>
@@ -59,25 +67,43 @@
     <script>
       var Base64 = {
         encode: function(plainText) {
-            return btoa(unescape(encodeURIComponent(plainText)));
+          return btoa(unescape(encodeURIComponent(plainText)));
         },
         decode: function(base64Encoded) {
-            return decodeURIComponent(escape(atob(base64Encoded)));
+          return decodeURIComponent(escape(atob(base64Encoded)));
         }
       };
       function base64Encode() {
-        var plainText = document.getElementById('base64EncoderInput').value;
-        if (plainText.length == 0) {
+        var input = document.getElementById('base64EncoderInput').value;
+        if (input.length == 0) {
           return
         }
-        document.getElementById('base64EncoderOutput').value = Base64.encode(plainText);
+        try {
+          var value = Base64.encode(input);
+          var urlEncode = document.getElementById('urlEncode').checked;
+          if (urlEncode) {
+            value = value.replace('+', '-').replace('/', '-');
+          }
+          document.getElementById('base64EncoderOutput').value = value;
+        } catch (error) {
+          alert('Faild to Base64 encode.\n' + error);
+        }
       }
       function base64Dencode() {
-        var base64Encoded = document.getElementById('base64DecoderInput').value;
-        if (base64Encoded.length == 0) {
+        var input = document.getElementById('base64DecoderInput').value;
+        if (input.length == 0) {
           return
         }
-        document.getElementById('base64DecoderOutput').value = Base64.decode(base64Encoded);
+        var urlDecode = document.getElementById('urlDecode').checked;
+        if (urlDecode) {
+          input = input.replace('-', '+').replace('-', '/');
+        }
+        try {
+          var value = Base64.decode(input);
+          document.getElementById('base64DecoderOutput').value = value
+        } catch (error) {
+          alert('Faild to Base64 decode.\n' + error);
+        }
       }
     </script>
 
