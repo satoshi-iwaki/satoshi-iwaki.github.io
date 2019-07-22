@@ -20,16 +20,16 @@
     <h1>UNIX timestamp conveter</h1>
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="timestamp-converter-tab" data-toggle="tab" href="#timestampConverter" role="tab" aria-controls="UNIX Timestamp to human-readable date" aria-selected="true">Unix Timestamp to human-readable date</a>
+          <a class="nav-link active" id="timestamp-converter-tab" data-toggle="tab" href="#timestampConverter" role="tab" aria-controls="UNIX timestamp to human-readable date" aria-selected="true">UNIX timestamp to human-readable date</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="dateConverter-tab" data-toggle="tab" href="#dateConverter" role="tab" aria-controls="Human-readable date to UNIX Timestamp" aria-selected="false">Human-readable date to UNIX Timestamp</a>
+          <a class="nav-link" id="dateConverter-tab" data-toggle="tab" href="#dateConverter" role="tab" aria-controls="Human-readable date to UNIX timestamp" aria-selected="false">Human-readable date to UNIX timestamp</a>
         </li>
       </ul>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="timestampConverter" role="tabpanel" aria-labelledby="timestampConverter-tab">
           <div class="form-group">
-            <label for="timestampInput">Timestamp:</label>
+            <label for="timestampInput">UNIX timestamp:</label>
             <textarea class="form-control" id="timestampInput" rows="3"></textarea>
           </div>
           <div class="text-right">
@@ -48,7 +48,6 @@
             <textarea class="form-control" id="timestampUtcOutput" rows="3" readonly></textarea>
           </div>
         </div>
-
         <div class="tab-pane fade" id="dateConverter" role="tabpanel" aria-labelledby="dateConverter-tab">
           <div class="form-row">
             <div class="form-group col-md-2">
@@ -75,7 +74,6 @@
               <label for="inputSeconds">Seconds</label>
               <input type="text" class="form-control" id="dateInputSeconds">
             </div>
-  
             <div class="form-group col-md-2">
               <label for="inputTimezone">Timezone</label>
               <select class="form-control" id="dateInputTimezone">
@@ -87,14 +85,10 @@
           <div class="text-right">
             <button type="button" class="btn btn-primary" onclick="convertToTimestamp()">Convert</button>
           </div>
-
           <div class="form-group">
-            <label for="dateOutput">Timestamp:</label>
+            <label for="dateOutput">UNIX timestamp:</label>
             <textarea class="form-control" id="dateOutput" rows="3" readonly></textarea>
           </div>
-
-
-          </div> 
         </div>
       </div>
     </div>
