@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mermaid editor</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- CodeMirror and mermaid -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.2.2/mermaid.min.js"></script>
+  </head>
+
+  <body class="bg-light">
+    <div class="container-fluid">
+      <div class="py-5 text-center">
+        <h2>Mermaid editor</h2>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 order-md-1">
+          <div class="form-group">
+            <textarea class="form-control" id="editorTextarea" rows="3" readonly></textarea>
+          </div>
+        </div>
+        <div class="col-md-6 order-md-2">
+          <div id="diagram"></div>
+        </div>
+      </div>
+
+      <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">&copy; 2019 iwaki.info</p>
+        <ul class="list-inline">
+          <li class="list-inline-item"><a href="#">Privacy</a></li>
+        </ul>
+      </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true
+        });
+        mermaid.parseError = function(err,hash){
+            ;
+        };
+
+        var diagram = document.getElementById('diagram');
+        var editor = CodeMirror.fromTextArea(editorTextarea, {
+            lineNumbers: true
+        });
+        var insertSvg = function(svgCode, bindFunctions) {
+            diagram.innerHTML = svgCode;
+            if (typeof callback !== 'undefined') {
+                callback(id);
+            }
+            bindFunctions(diagram);
+        };
+        var id = 'diagramSvg';
+        editor.on("change", function(doc, changeObj) {
+            var text = doc.getValue();
+            console.log("@@@ text @@@");
+            console.log(text);
+            mermaid.render(id, text, insertSvg, diagram);
+        });
+    </script>
+  </body>
+</html>
