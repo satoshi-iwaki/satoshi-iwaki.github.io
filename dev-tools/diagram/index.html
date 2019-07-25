@@ -15,25 +15,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.2.2/mermaid.min.js"></script>
+    <style>
+      .CodeMirror {
+        border: 1px solid #eee;
+        height: auto;
+      }
+      .CodeMirror-scroll {
+        overflow: auto;
+        height: auto; overflow: visible;
+        position: relative;
+        outline: none;
+        min-height: 480px;
+      }
+    </style>
   </head>
 
   <body class="bg-light">
     <div class="container-fluid">
       <div class="py-5 text-center">
         <h2>Mermaid editor</h2>
-      </div>
+     </div>
 
       <div class="row">
         <div class="col-md-6 order-md-1">
           <div class="form-group">
             <textarea class="form-control" id="editorTextarea" rows="3" readonly></textarea>
-          </div>
+        </div>
         </div>
         <div class="col-md-6 order-md-2">
           <div id="diagram"></div>
         </div>
       </div>
-
+      <div class="py-5 text-center">
+        <a class="btn btn-primary" id="exportDiagram" role="button" href="#" download="diagram.svg" role="button"onclick="exportDiagram()">Export to SVG</a>
+      </div>
+    
       <footer class="my-5 pt-5 text-muted text-center text-small">
         <p class="mb-1">&copy; 2019 iwaki.info</p>
         <ul class="list-inline">
@@ -47,30 +63,41 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
         mermaid.initialize({
-            startOnLoad: true
+            startOnLoad: true,
+            viewportMargin: Infinity
         });
         mermaid.parseError = function(err,hash){
             ;
         };
 
+        var id = 'diagramSvg';
         var diagram = document.getElementById('diagram');
         var editor = CodeMirror.fromTextArea(editorTextarea, {
             lineNumbers: true
         });
-        var insertSvg = function(svgCode, bindFunctions) {
+        editor.on("change", function(doc, changeObj) {
+            var text = doc.getValue();
+            renderDiagram(text);
+        });
+
+        function insertSvg(svgCode, bindFunctions) {
             diagram.innerHTML = svgCode;
             if (typeof callback !== 'undefined') {
                 callback(id);
             }
             bindFunctions(diagram);
         };
-        var id = 'diagramSvg';
-        editor.on("change", function(doc, changeObj) {
-            var text = doc.getValue();
-            console.log("@@@ text @@@");
-            console.log(text);
+
+        function renderDiagram(text) {
             mermaid.render(id, text, insertSvg, diagram);
-        });
+        }
+
+        function exportDiagram() {
+            var content = diagram.innerHTML;
+            var blob = new Blob([content], {'type': 'image/svg+xml'});
+            var url = window.URL.createObjectURL(blob);
+            document.getElementById("exportDiagram").href = url;
+        }
     </script>
   </body>
 </html>
