@@ -14,7 +14,9 @@
     <!-- CodeMirror and mermaid -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/mode/simple.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.2.2/mermaid.min.js"></script>
+    <script src="libs/codemirror/mode/mermaid.js"></script>
     <style>
       .CodeMirror {
         border: 1px solid #eee;
@@ -78,7 +80,8 @@
         var id = 'diagramSvg';
         var diagram = document.getElementById('diagram');
         var editor = CodeMirror.fromTextArea(editorTextarea, {
-            lineNumbers: true
+            lineNumbers: true,
+            mode: 'mermaid'
         });
         editor.on("change", function(doc, changeObj) {
             var text = doc.getValue();
@@ -94,7 +97,10 @@
         };
 
         function renderDiagram(text) {
-            mermaid.render(id, text, insertSvg, diagram);
+            try {
+                mermaid.render(id, text, insertSvg, diagram);
+            } catch (e) {
+            }
         }
 
         function exportDiagram() {
