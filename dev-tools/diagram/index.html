@@ -41,22 +41,47 @@
     <div class="container-fluid">
       <div class="py-5 text-center">
         <h2>Mermaid editor</h2>
-     </div>
-
-      <div class="row">
-        <div class="col-md-6 order-md-1">
-          <div class="form-group">
-            <textarea class="form-control" id="editorTextarea" rows="3" readonly></textarea>
+      </div>
+      <ul class="nav nav-tabs" id="tab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="source-editor-tab" data-toggle="tab" href="#source-editor-tab-pane" role="tab" aria-controls="Editor" aria-selected="true">Editor</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="configuration-editor-tab" data-toggle="tab" href="#configuration-editor-tab-pane" role="tab" aria-controls="Configuration" aria-selected="false">Configuration</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="tab-content">
+        <div class="tab-pane fade show active" id="source-editor-tab-pane" role="tabpanel" aria-labelledby="source-editor-tab">
+          <div class="row">
+            <div class="col-md-5 order-md-1">
+              <div class="form-group">
+                <textarea class="form-control" id="sourceTextarea" rows="3" readonly></textarea>
+              </div>
+            </div>
+            <div class="col-md-7 order-md-2">
+              <div class="diagram" id="diagram"></div>
+            </div>
+          </div>
+          <div class="py-5 text-center">
+            <a class="btn btn-primary" id="exportDiagram" role="button" href="#" download="diagram.svg" role="button"onclick="exportDiagram()">Export to SVG</a>
           </div>
         </div>
-        <div class="col-md-6 order-md-2">
-          <div class="diagram" id="diagram"></div>
+        <div class="tab-pane fade show active" id="configuration-editor-tab-pane" role="tabpanel" aria-labelledby="configuration-editor-tab">
+          <div class="row">
+            <div class="col-md-5 order-md-1">
+              <div class="form-group">
+                <textarea class="form-control" id="configurationTextarea" rows="3" readonly></textarea>
+              </div>
+            </div>
+            <div class="col-md-7 order-md-2">
+              <div class="diagram" id="diagram2"></div>
+            </div>
+          </div>
+          <div class="py-5 text-center">
+            <a class="btn btn-primary" id="exportDiagram2" role="button" href="#" download="diagram.svg" role="button"onclick="exportDiagram()">Export to SVG</a>
+          </div>
         </div>
       </div>
-      <div class="py-5 text-center">
-        <a class="btn btn-primary" id="exportDiagram" role="button" href="#" download="diagram.svg" role="button"onclick="exportDiagram()">Export to SVG</a>
-      </div>
-    
       <footer class="my-5 pt-5 text-muted text-center text-small">
         <p class="mb-1">&copy; 2019 iwaki.info</p>
         <ul class="list-inline">
@@ -69,46 +94,66 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
-        mermaid.initialize({
-            startOnLoad: true,
-            viewportMargin: Infinity
-        });
-        mermaid.parseError = function(err,hash){
-            ;
-        };
+      mermaid.initialize({
+          startOnLoad: true,
+          viewportMargin: Infinity
+      });
+      mermaid.parseError = function(err, hash) {
+          ;
+      };
 
-        var id = 'diagramSvg';
-        var diagram = document.getElementById('diagram');
-        var editor = CodeMirror.fromTextArea(editorTextarea, {
-            lineNumbers: true,
-            mode: 'mermaid'
-        });
-        editor.on("change", function(doc, changeObj) {
-            var text = doc.getValue();
-            renderDiagram(text);
-        });
+      var id = 'diagramSvg';
+      var diagram = document.getElementById('diagram');
+      var sourceTextarea = document.getElementById('sourceTextarea');
+      var sourceEditor = CodeMirror.fromTextArea(sourceTextarea, {
+          lineNumbers: true,
+          mode: 'mermaid'
+      });
+      sourceEditor.on("change", function(doc, changeObj) {
+          var text = doc.getValue();
+          renderDiagram(text);
+      });
+      var configurationTextarea = document.getElementById('configurationTextarea');
+      var configurationEditor = CodeMirror.fromTextArea(configurationTextarea, {
+          lineNumbers: true,
+          mode: 'javascript'
+      });
+      configurationEditor.on("change", function(doc, changeObj) {
+          var text = doc.getValue();
+          setConfiguration(text);
+      });
 
-        function insertSvg(svgCode, bindFunctions) {
-            diagram.innerHTML = svgCode;
-            if (typeof callback !== 'undefined') {
-                callback(id);
-            }
-            bindFunctions(diagram);
-        };
+      function setConfiguration(text) {
+        try {
+          sequenceConfig = JSON.parse(text);
+          mermaid.sequenceConfig = sequenceConfig;
+        } catch(e) {
 
-        function renderDiagram(text) {
-            try {
-                mermaid.render(id, text, insertSvg, diagram);
-            } catch (e) {
-            }
         }
+      }
 
-        function exportDiagram() {
-            var content = diagram.innerHTML;
-            var blob = new Blob([content], {'type': 'image/svg+xml'});
-            var url = window.URL.createObjectURL(blob);
-            document.getElementById("exportDiagram").href = url;
+      function insertSvg(svgCode, bindFunctions) {
+        diagram.innerHTML = svgCode;
+        if (typeof callback !== 'undefined') {
+            callback(id);
         }
+        bindFunctions(diagram);
+      };
+
+      function renderDiagram(text) {
+        try {
+          mermaid.render(id, text, insertSvg, diagram);
+        } catch (e) {
+          diagram.innerHTML = '<textarea>' + text + '</textarea>';
+        }
+      }
+
+      function exportDiagram() {
+          var content = diagram.innerHTML;
+          var blob = new Blob([content], {'type': 'image/svg+xml'});
+          var url = window.URL.createObjectURL(blob);
+          document.getElementById("exportDiagram").href = url;
+      }
     </script>
   </body>
 </html>
