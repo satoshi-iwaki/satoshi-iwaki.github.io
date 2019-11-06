@@ -12,9 +12,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- CodeMirror and mermaid -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/mode/simple.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/mode/simple.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/javascript/javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/display/autorefresh.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.2.2/mermaid.min.js"></script>
     <script src="libs/codemirror/mode/mermaid.js"></script>
     <style>
@@ -42,9 +44,12 @@
       <div class="py-5 text-center">
         <h2>Mermaid editor</h2>
       </div>
+      <div class="py-5 text-center">
+        <a class="btn btn-primary" id="exportDiagram" role="button" href="#" download="diagram.svg" role="button"onclick="exportDiagram()">Export to SVG</a>
+      </div>
       <ul class="nav nav-tabs" id="tab" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="source-editor-tab" data-toggle="tab" href="#source-editor-tab-pane" role="tab" aria-controls="Editor" aria-selected="true">Editor</a>
+          <a class="nav-link active" id="source-editor-tab" data-toggle="tab" href="#source-editor-tab-pane" role="tab" aria-controls="Source" aria-selected="true">Source</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="configuration-editor-tab" data-toggle="tab" href="#configuration-editor-tab-pane" role="tab" aria-controls="Configuration" aria-selected="false">Configuration</a>
@@ -62,11 +67,8 @@
               <div class="diagram" id="diagram"></div>
             </div>
           </div>
-          <div class="py-5 text-center">
-            <a class="btn btn-primary" id="exportDiagram" role="button" href="#" download="diagram.svg" role="button"onclick="exportDiagram()">Export to SVG</a>
-          </div>
         </div>
-        <div class="tab-pane fade show active" id="configuration-editor-tab-pane" role="tabpanel" aria-labelledby="configuration-editor-tab">
+        <div class="tab-pane fade" id="configuration-editor-tab-pane" role="tabpanel" aria-labelledby="configuration-editor-tab">
           <div class="row">
             <div class="col-md-5 order-md-1">
               <div class="form-group">
@@ -74,14 +76,13 @@
               </div>
             </div>
             <div class="col-md-7 order-md-2">
-              <div class="diagram" id="diagram2"></div>
             </div>
-          </div>
-          <div class="py-5 text-center">
-            <a class="btn btn-primary" id="exportDiagram2" role="button" href="#" download="diagram.svg" role="button"onclick="exportDiagram()">Export to SVG</a>
           </div>
         </div>
       </div>
+
+
+
       <footer class="my-5 pt-5 text-muted text-center text-small">
         <p class="mb-1">&copy; 2019 iwaki.info</p>
         <ul class="list-inline">
@@ -94,44 +95,61 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
-      mermaid.initialize({
+      var source = `graph TD
+      A[Christmas] -->|Get money| B(Go shopping)
+      B --> C{Let me think}
+      C -->|One| D[Laptop]
+      C -->|Two| E[iPhone]
+      C -->|Three| F[fa:fa-car Car]
+      `
+      var configuration = {
           startOnLoad: true,
-          viewportMargin: Infinity
-      });
-      mermaid.parseError = function(err, hash) {
-          ;
+          viewportMargin: Infinity,
+          theme: 'dark'
       };
 
-      var id = 'diagramSvg';
-      var diagram = document.getElementById('diagram');
+      // initialize source editor
       var sourceTextarea = document.getElementById('sourceTextarea');
+      sourceTextarea.value = source;
       var sourceEditor = CodeMirror.fromTextArea(sourceTextarea, {
           lineNumbers: true,
+          autoRefresh:true,
           mode: 'mermaid'
       });
       sourceEditor.on("change", function(doc, changeObj) {
-          var text = doc.getValue();
-          renderDiagram(text);
-      });
-      var configurationTextarea = document.getElementById('configurationTextarea');
-      var configurationEditor = CodeMirror.fromTextArea(configurationTextarea, {
-          lineNumbers: true,
-          mode: 'javascript'
-      });
-      configurationEditor.on("change", function(doc, changeObj) {
-          var text = doc.getValue();
-          setConfiguration(text);
+        source = doc.getValue();
+        renderDiagram(source);
       });
 
-      function setConfiguration(text) {
+      var configurationTextarea = document.getElementById('configurationTextarea');
+      configurationTextarea.value = JSON.stringify(configuration, null, 2);
+      var configurationEditor = CodeMirror.fromTextArea(configurationTextarea, {
+          lineNumbers: true,
+          autoRefresh:true,
+          mode: 'application/json'
+      });
+      configurationEditor.on("change", function(doc, changeObj) {
+        var text = doc.getValue();
         try {
-          sequenceConfig = JSON.parse(text);
-          mermaid.sequenceConfig = sequenceConfig;
-        } catch(e) {
+          var json = JSON.parse(text);
+          configuration = json;
+        } catch (e) {
+
+        }
+        setConfiguration(configuration);
+        renderDiagram(source);
+      });
+
+      function setConfiguration(config) {
+        try {
+          mermaid.initialize(config);
+        } catch (e) {
 
         }
       }
 
+      var id = 'diagramSvg';
+      var diagram = document.getElementById('diagram');
       function insertSvg(svgCode, bindFunctions) {
         diagram.innerHTML = svgCode;
         if (typeof callback !== 'undefined') {
@@ -144,7 +162,7 @@
         try {
           mermaid.render(id, text, insertSvg, diagram);
         } catch (e) {
-          diagram.innerHTML = '<textarea>' + text + '</textarea>';
+          diagram.innerHTML = '<div>' + text + '</div>';
         }
       }
 
@@ -154,6 +172,13 @@
           var url = window.URL.createObjectURL(blob);
           document.getElementById("exportDiagram").href = url;
       }
+      
+      // initialize mermaid
+      mermaid.initialize(configuration);
+      mermaid.parseError = function(err, hash) {
+          ;
+      };
+      renderDiagram(source);
     </script>
   </body>
 </html>
