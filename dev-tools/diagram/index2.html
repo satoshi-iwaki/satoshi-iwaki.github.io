@@ -1,27 +1,13 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144024189-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-144024189-1');
-    </script>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta name="description" content="diagram, mermaid">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <title>Mermaid editor</title>
-    <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- CodeMirror and mermaid -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/mode/simple.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/javascript/javascript.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/display/autorefresh.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.2.2/mermaid.min.js"></script>
-    <script src="libs/codemirror/mode/mermaid.js"></script>
     <style>
       .CodeMirror {
         border: 1px solid #eee;
@@ -38,6 +24,12 @@
         border: 1px solid #eee;
         background-color: white;
         min-height: 480px;
+      }
+      .editor-container {
+        border: 1px solid #eee;
+        min-height: 480px;
+        width:100%;
+        height:500px;
       }
     </style>
   </head>
@@ -63,7 +55,8 @@
           <div class="row">
             <div class="col-md-5 order-md-1">
               <div class="form-group">
-                <textarea class="form-control" id="sourceTextarea" rows="3" readonly></textarea>
+                <div class="editor-container" id="container1"></div>
+                <!-- <textarea class="form-control" id="sourceTextarea" rows="3" readonly></textarea> -->
               </div>
             </div>
             <div class="col-md-7 order-md-2">
@@ -71,11 +64,12 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane fade" id="configuration-editor-tab-pane" role="tabpanel" aria-labelledby="configuration-editor-tab">
+        <div class="tab-pane fade show" id="configuration-editor-tab-pane" role="tabpanel" aria-labelledby="configuration-editor-tab">
           <div class="row">
             <div class="col-md-5 order-md-1">
               <div class="form-group">
-                <textarea class="form-control" id="configurationTextarea" rows="3" readonly></textarea>
+                <div class="editor-container" id="container2"></div>
+                <!-- <textarea class="form-control" id="configurationTextarea" rows="3" readonly></textarea> -->
               </div>
             </div>
             <div class="col-md-7 order-md-2">
@@ -107,39 +101,6 @@
           viewportMargin: Infinity,
           theme: 'dark'
       };
-
-      // initialize source editor
-      var sourceTextarea = document.getElementById('sourceTextarea');
-      sourceTextarea.value = source;
-      var sourceEditor = CodeMirror.fromTextArea(sourceTextarea, {
-          lineNumbers: true,
-          autoRefresh:true,
-          mode: 'mermaid'
-      });
-      sourceEditor.on("change", function(doc, changeObj) {
-        source = doc.getValue();
-        renderDiagram(source);
-      });
-
-      // initialize configuration editor
-      var configurationTextarea = document.getElementById('configurationTextarea');
-      configurationTextarea.value = JSON.stringify(configuration, null, 2);
-      var configurationEditor = CodeMirror.fromTextArea(configurationTextarea, {
-          lineNumbers: true,
-          autoRefresh:true,
-          mode: 'application/json'
-      });
-      configurationEditor.on("change", function(doc, changeObj) {
-        var text = doc.getValue();
-        try {
-          var json = JSON.parse(text);
-          configuration = json;
-        } catch (e) {
-
-        }
-        setConfiguration(configuration);
-        renderDiagram(source);
-      });
 
       function setConfiguration(config) {
         try {
@@ -180,9 +141,50 @@
           ;
       };
       renderDiagram(source);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.18.0/min/vs/loader.js"></script>
+    <script>
+      var editor1;
+      var editor2;
+      var session1;
+      var session2;
+      require.config({ 
+        paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.18.0/min/vs' },
+        'vs/nls' : {
+          availableLanguages : {
+            "*" : "ja"
+          }
+        }
+      });
 
+      require(['vs/editor/editor.main'], function() {
+        session1 = monaco.editor.createModel(source, "mermaid");
+        session2 = monaco.editor.createModel(JSON.stringify(configuration, null, 2), "json");
+        editor1 = monaco.editor.create(document.getElementById('container1'), {automaticLayout: true, theme: 'mermaidTheme',});
+        editor2 = monaco.editor.create(document.getElementById('container2'), {automaticLayout: true});
+        editor1.setModel(session1);
+        editor2.setModel(session2);
+
+        editor1.onDidChangeModelContent(e => {
+          var text = editor1.getModel().getValue();
+          renderDiagram(text);
+        });
+        editor2.onDidChangeModelContent(e => {
+          var text1 = editor1.getModel().getValue();
+          var text2 = editor2.getModel().getValue();
+          try {
+            var json = JSON.parse(text2);
+            configuration = json;
+          } catch (e) {
+
+          }
+          setConfiguration(configuration);
+          renderDiagram(text1);
+        });
+      });
       $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        renderDiagram(source);
+        var text = editor1.getModel().getValue();
+        renderDiagram(text);
       })
     </script>
   </body>
