@@ -47,7 +47,7 @@
   <body class="bg-light">
     <div class="container-fluid">
       <div class="py-5 text-center">
-        <h2>Mermaid editor</h2>
+        <h2>Markdown editor</h2>
       </div>
       <div class="py-5 text-center">
         <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button"onclick="exportHtml()">Export to html</a>
@@ -65,7 +65,7 @@
           <div class="row">
             <div class="col-md-6 order-md-1">
               <div class="form-group">
-                <textarea class="form-control" id="sourceTextarea" rows="3" readonly></textarea>
+                <textarea class="form-control" id="source-textarea" rows="3" readonly></textarea>
               </div>
             </div>
             <div class="col-md-6 order-md-2">
@@ -78,7 +78,7 @@
           <div class="row">
             <div class="col-md-6 order-md-1">
               <div class="form-group">
-                <textarea class="form-control" id="configurationTextarea" rows="3" readonly></textarea>
+                <textarea class="form-control" id="configuration-textarea" rows="3" readonly></textarea>
               </div>
             </div>
             <div class="col-md-6 order-md-2">
@@ -105,10 +105,10 @@
           url: url,
           dataType: 'text',
           async : false,
-          success: function(response){
+          success: function(response) {
               return response;
           },
-          error: function(response){
+          error: function(response) {
               return response;
           }
         }).responseText;
@@ -118,7 +118,7 @@
       var source = xhr('sample.md')
 
       // initialize source editor
-      var sourceTextarea = document.getElementById('sourceTextarea');
+      var sourceTextarea = document.getElementById('source-textarea');
       sourceTextarea.value = source;
       var sourceEditor = CodeMirror.fromTextArea(sourceTextarea, {
           lineNumbers: true,
