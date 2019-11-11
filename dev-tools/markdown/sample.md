@@ -15,7 +15,6 @@
 
 `printf("hello, world\n");`
 
-
 ### Emoji
 
 :smile: :+1:
@@ -33,6 +32,13 @@
    1. Ordered list item 2-1
    1. Ordered list item 2-2
 
+### Task list items
+
+- [ ] Task list item 1
+  - [ ] Task list item 1-2
+- [x] Task list item 2
+  - [x] Task list item 2-2
+
 ### Headings
 # Heading 1
 ## Heading 2
@@ -41,12 +47,18 @@
 ##### Heading 5
 ###### Heading 6
 
-
 ## Blocks
 ### Quotes
 
-> Block quotes text
+> Block quotes text 1
+>> Block quotes text 2
 
+### Tables
+
+| Default   | Center-aligne | Left-aligned | Right-aligned |
+| --------- |:-------------:| :----------- | -------------:|
+| Default   | Center        | Left         | Right         |
+| Default   | Center        | Left         | Right         |
 
 ### Code
 
@@ -58,4 +70,3 @@ main(void) {
     printf("hello, world\n");
 }
 ```
-
