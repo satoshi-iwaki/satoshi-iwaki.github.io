@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Mermaid editor</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href='lib/highlight.js/styles/github.css'></link>
+    <link rel="stylesheet" href="css/light.css">
+    <style>
+      .editor-container {
+        border: 1px solid #eee;
+        width:100%;
+        height:100%;
+      }
+      .markdown-container {
+        border: 1px solid #eee;
+        background-color: white;
+        min-height: 480px;
+        padding: 16px;
+        width:100%;
+        overflow: scroll;
+      }
+      .container-fluid {
+        height: 100%;
+      }
+      .row {
+        height: 100%;
+      }
+      .col-md-6 {
+        height: 100%;
+        overflow: scroll;
+      }
+      html, body {
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body class="bg-light">
+    <div class="container-fluid">
+      <div class="py-5 text-center">
+        <h2>Markdown editor</h2>
+        <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button"onclick="exportHtml()">Export to html</a>
+      </div>
+      <div class="row">
+        <div class="col-md-6 order-md-1">
+          <div class="editor-container" id="container1"></div>
+        </div>
+        <div class="col-md-6 order-md-2">
+          <div class="markdown-container container">
+            <markdown class="markdown">
+            </markdown>
+          </div>
+        </div>
+      </div>
+      <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">&copy; 2019 iwaki.info</p>
+        <ul class="list-inline">
+          <li class="list-inline-item"><a href="#">Privacy</a></li>
+        </ul>
+      </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.7.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="lib/highlight.js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+      function xhr(url) {
+        return $.ajax({
+          type: 'GET',
+          url: url,
+          dataType: 'text',
+          async : false,
+          success: function(response) {
+              return response;
+          },
+          error: function(response) {
+              return response;
+          }
+        }).responseText;
+      }
+    </script>
+    <script>
+      var source = xhr('sample.md')
+      var configuration = {
+          startOnLoad: true,
+          viewportMargin: Infinity,
+          theme: 'dark'
+      };
+
+      function renderMarkdwon(markdown) {
+        $(".markdown-container").each(function(index, target) {
+          // const replacer = (match) => emoji.emojify(match);
+          // markdown = markdown.replace(/(:.*:)/g, replacer);
+          target.innerHTML = marked(markdown);
+        });
+      }
+
+      function exportHtml() {
+        $(".markdown-container").each(function(index, target) {
+          var style1 = xhr('css/light.css')
+          var style2 = xhr('lib/highlight.js/styles/github.css')          
+          var content = target.innerHTML;
+          var html = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+                <title>Markdown</title>
+                <style>
+                  ${style1}
+                  ${style2}
+                  .markdown-container {
+                    border: 1px solid #eee;
+                    background-color: white;
+                    min-height: 480px;
+                    padding: 16px;
+                  }
+                </style>
+            </head>
+            <body>
+              <div class="markdown-container markdown">
+                ${content}
+              </div>
+            </body>
+          </html>
+          `
+          var blob = new Blob([html], {'type': 'text/html'});
+          var url = window.URL.createObjectURL(blob);
+          document.getElementById("exportHtml").href = url;
+        });
+      }
+      renderMarkdwon(source);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.18.0/min/vs/loader.js"></script>
+    <script>
+      var editor;
+      var session;
+      require.config({ 
+        paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.18.0/min/vs' },
+        'vs/nls' : {
+          availableLanguages : {
+            "*" : "ja"
+          }
+        }
+      });
+
+      require(['vs/editor/editor.main'], function() {
+        session = monaco.editor.createModel(source, "markdown");
+        editor = monaco.editor.create(document.getElementById('container1'), {automaticLayout: true, theme: 'mermaidTheme',});
+        editor.setModel(session);
+        editor.onDidChangeModelContent(e => {
+          var markdown = editor.getModel().getValue();
+          $(".markdown-container").each(function(index, target) {
+              target.innerHTML = marked(markdown);
+          });
+        });
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          var markdown = editor.getModel().getValue();
+          renderDiagram(markdown);
+        })
+        $(document).ready(function(){
+            marked.setOptions({
+                langPrefix: '',
+                highlight: function(code, lang) {
+                    return hljs.highlightAuto(code, [lang]).value
+                }
+            });
+            $(".markdown-container").each(function(index, target) {
+                var markdown = editor.getModel().getValue();
+                target.innerHTML = marked(markdown);
+            });
+        });
+      });
+    </script>
+  </body>
+</html>
