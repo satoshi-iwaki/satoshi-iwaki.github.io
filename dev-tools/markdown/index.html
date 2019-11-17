@@ -26,73 +26,75 @@
     <script src="lib/gfm.js"></script>
     <style>
       .CodeMirror {
-        border: 1px solid #eee;
-        height: auto;
+        height: 100%;
       }
-      .CodeMirror-scroll {
-        overflow: auto;
-        height: auto; overflow: visible;
-        position: relative;
-        outline: none;
-        min-height: 480px;
+      .editor-container {
+        border: 1px solid #eee;
+        width:100%;
+        height:100%;
       }
       .markdown-container {
         border: 1px solid #eee;
         background-color: white;
         min-height: 480px;
         padding: 16px;
+        width:100%;
+        overflow: scroll;
+      }
+      .editor-textarea {
+        height: 100%;
+      }
+      .container-fluid {
+        height: 100%;
+      }
+      .row {
+        height: 100%;
+      }
+      .col-md-6 {
+        height: 100%;
+        overflow: scroll;
+      }
+      html {
+        height: 100%;
+      }
+      body {
+        padding-top: 4.5rem;
+        padding-bottom: 4.0rem;
+        height: 100%;
       }
     </style>
   </head>
 
   <body class="bg-light">
     <div class="container-fluid">
-      <div class="py-5 text-center">
-        <h2>Markdown editor</h2>
-      </div>
-      <div class="py-5 text-center">
-        <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button"onclick="exportHtml()">Export to html</a>
-      </div>
-      <ul class="nav nav-tabs" id="tab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="source-editor-tab" data-toggle="tab" href="#source-editor-tab-pane" role="tab" aria-controls="Source" aria-selected="true">Source</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="configuration-editor-tab" data-toggle="tab" href="#configuration-editor-tab-pane" role="tab" aria-controls="Configuration" aria-selected="false">Configuration</a>
-        </li>
-      </ul>
-      <div class="tab-content" id="tab-content">
-        <div class="tab-pane fade show active" id="source-editor-tab-pane" role="tabpanel" aria-labelledby="source-editor-tab">
-          <div class="row">
-            <div class="col-md-6 order-md-1">
-              <div class="form-group">
-                <textarea class="form-control" id="source-textarea" rows="3" readonly></textarea>
-              </div>
-            </div>
-            <div class="col-md-6 order-md-2">
-              <div class="markdown-container markdown container">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="configuration-editor-tab-pane" role="tabpanel" aria-labelledby="configuration-editor-tab">
-          <div class="row">
-            <div class="col-md-6 order-md-1">
-              <div class="form-group">
-                <textarea class="form-control" id="configuration-textarea" rows="3" readonly></textarea>
-              </div>
-            </div>
-            <div class="col-md-6 order-md-2">
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">&copy; 2019 iwaki.info</p>
-        <ul class="list-inline">
-          <li class="list-inline-item"><a href="#">Privacy</a></li>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">Markdown editor</a>
+        <ul class="navbar-nav mr-auto flex-row">
         </ul>
-      </footer>
+      </nav>
+      <div class="row">
+        <div class="col-md-6 order-md-1">
+          <div class="editor-container" id="container1">
+            <textarea class="editor-textarea" id="source-textarea" rows="3" readonly></textarea>
+          </div>
+        </div>
+        <div class="col-md-6 order-md-2">
+          <div class="markdown-container markdown container"></div>
+        </div>
+      </div>
+      <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="https://iwaki.info/dev-tools">&copy; 2019 iwaki.info <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Privacy</a>
+            </li>
+          </ul>
+          <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button"onclick="exportHtml()">Export to html</a>
+        </div>
+      </nav>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.7.0/marked.min.js"></script>
@@ -145,11 +147,6 @@
         renderMarkdwon(source);
       });
 
-      // renderMarkdwon(source);
-      $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        renderMarkdwon(source);
-      })
-
       function renderMarkdwon(markdown) {
         $(".markdown-container").each(function(index, target) {
           target.innerHTML = marked(markdown);
@@ -160,6 +157,7 @@
         $(".markdown-container").each(function(index, target) {
           var style1 = xhr('css/light.css')
           var style2 = xhr('lib/highlight.js/styles/github.css')
+          
           var content = target.innerHTML;
           var html = `
           <!DOCTYPE html>

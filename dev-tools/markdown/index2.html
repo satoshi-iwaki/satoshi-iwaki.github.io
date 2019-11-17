@@ -46,12 +46,6 @@
     <div class="container-fluid">
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#">Markdown editor</a>
-        <ul class="navbar-nav mr-auto flex-row">
-          <li class="nav-item">
-              <a class="nav-link" href="https://iwaki.info/dev-tools">&copy; 2019 iwaki.info <span class="sr-only">(current)</span></a>
-          </li>
-        </ul>
-        <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button"onclick="exportHtml()">Export to html</a>
       </nav>
       <div class="row">
         <div class="col-md-6 order-md-1">
@@ -61,6 +55,19 @@
           <div class="markdown-container container"></div>
         </div>
       </div>
+      <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="https://iwaki.info/dev-tools">&copy; 2019 iwaki.info <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Privacy</a>
+            </li>
+          </ul>
+          <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button"onclick="exportHtml()">Export to html</a>
+        </div>
+      </nav>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.7.0/marked.min.js"></script>
@@ -84,22 +91,51 @@
         }).responseText;
       }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.18.0/min/vs/loader.js"></script>
     <script>
       var source = xhr('sample.md')
-      var configuration = {
-          startOnLoad: true,
-          viewportMargin: Infinity,
-          theme: 'dark'
-      };
+      var editor;
+      var session;
+      require.config({ 
+        paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.18.0/min/vs' },
+        'vs/nls' : {
+          availableLanguages : {
+            "*" : "ja"
+          }
+        }
+      });
 
+      require(['vs/editor/editor.main'], function() {
+        session = monaco.editor.createModel(source, "markdown");
+        editor = monaco.editor.create(document.getElementById('container1'), {automaticLayout: true, theme: 'mermaidTheme',});
+        editor.setModel(session);
+        editor.onDidChangeModelContent(e => {
+          var markdown = editor.getModel().getValue();
+          renderMarkdwon(markdown);
+        });
+        $(document).ready(function(){
+            marked.setOptions({
+                langPrefix: '',
+                highlight: function(code, lang) {
+                    return hljs.highlightAuto(code, [lang]).value
+                }
+            });
+            var markdown = editor.getModel().getValue();
+            renderMarkdwon(markdown);
+            $(".theme-picker").change(function() {
+              changeTheme(this.selectedIndex);
+            });
+        });
+      });
+      function changeTheme(theme) {
+        var newTheme = (theme === 1 ? 'vs-dark' : ( theme === 0 ? 'vs' : 'hc-black' ));
+        monaco.editor.setTheme(newTheme);
+      }
       function renderMarkdwon(markdown) {
         $(".markdown-container").each(function(index, target) {
-          // const replacer = (match) => emoji.emojify(match);
-          // markdown = markdown.replace(/(:.*:)/g, replacer);
           target.innerHTML = marked(markdown);
         });
       }
-
       function exportHtml() {
         $(".markdown-container").each(function(index, target) {
           var style1 = xhr('css/light.css')
@@ -135,48 +171,6 @@
           document.getElementById("exportHtml").href = url;
         });
       }
-      renderMarkdwon(source);
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.18.0/min/vs/loader.js"></script>
-    <script>
-      var editor;
-      var session;
-      require.config({ 
-        paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.18.0/min/vs' },
-        'vs/nls' : {
-          availableLanguages : {
-            "*" : "ja"
-          }
-        }
-      });
-
-      require(['vs/editor/editor.main'], function() {
-        session = monaco.editor.createModel(source, "markdown");
-        editor = monaco.editor.create(document.getElementById('container1'), {automaticLayout: true, theme: 'mermaidTheme',});
-        editor.setModel(session);
-        editor.onDidChangeModelContent(e => {
-          var markdown = editor.getModel().getValue();
-          $(".markdown-container").each(function(index, target) {
-              target.innerHTML = marked(markdown);
-          });
-        });
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-          var markdown = editor.getModel().getValue();
-          renderDiagram(markdown);
-        })
-        $(document).ready(function(){
-            marked.setOptions({
-                langPrefix: '',
-                highlight: function(code, lang) {
-                    return hljs.highlightAuto(code, [lang]).value
-                }
-            });
-            $(".markdown-container").each(function(index, target) {
-                var markdown = editor.getModel().getValue();
-                target.innerHTML = marked(markdown);
-            });
-        });
-      });
     </script>
   </body>
 </html>
