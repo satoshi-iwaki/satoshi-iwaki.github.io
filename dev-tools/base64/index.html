@@ -14,12 +14,27 @@
     <title>Base64 encoder and decoder</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+      body {
+        padding-top: 4.5rem;
+        padding-bottom: 4.0rem;
+      }
+    </style>
   </head>
   <body class="bg-light">
     <div class="container-fluid">
-      <div class="py-5 text-center">
-        <h2>Base64 encoder and decoder</h2>
-      </div>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">Base64 encoder and decoder</a>
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav mr-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tools</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
+                </div>
+              </li>
+            </ul>
+        </div>
+      </nav>
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="base64encoder-tab" data-toggle="tab" href="#base64encoder" role="tab" aria-controls="base64 encoder" aria-selected="true">Base64 encoder</a>
@@ -45,7 +60,6 @@
             <label for="base64EncoderOutput">Base64 encoded:</label>
             <textarea class="form-control" id="base64EncoderOutput" rows="3" readonly></textarea>
           </div>
-      
         </div>
         <div class="tab-pane fade" id="base64decoder" role="tabpanel" aria-labelledby="base64decoder-tab">
             <div class="form-group">
@@ -65,12 +79,18 @@
             </div>
         </div>
       </div>
-      <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">&copy; 2019 iwaki.info</p>
-        <ul class="list-inline">
-          <li class="list-inline-item"><a href="#">Privacy</a></li>
-        </ul>
-      </footer>
+      <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="https://iwaki.info/dev-tools">&copy; 2019 iwaki.info <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Privacy</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </div>
     <script>
       var Base64 = {
@@ -115,8 +135,9 @@
       }
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="../menu.js"></script>
   </body>
 </html>
