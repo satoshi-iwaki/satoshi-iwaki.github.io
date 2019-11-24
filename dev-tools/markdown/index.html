@@ -13,6 +13,7 @@
     <meta name="description" content="markdwon">
     <title>Markdown editor</title>
     <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!-- CodeMirror and mermaid -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.css">
@@ -78,13 +79,53 @@
               </li>
             </ul>
         </div>
-        <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button"onclick="exportHtml()">Export to html</a>
+        <div class="collapse navbar-collapse">
+          <div class="btn-group">
+            <button class="btn btn-outline-light btn-sm" aria-label="Bold" type="button" onclick="bold()">
+              <i class="fas fa-bold"></i>
+            </button>
+            <button class="btn btn-outline-light btn-sm" aria-label="Italic" type="button" onclick="italic()">
+              <i class="fas fa-italic"></i>
+            </button>
+            <button class="btn btn-outline-light btn-sm" aria-label="Strikethrough" type="button" onclick="strikethrough()">
+              <i class="fas fa-strikethrough"></i>
+            </button>
+            <button class="btn btn-outline-light btn-sm" aria-label="Quote" type="button" onclick="quote()">
+              <i class="fas fa-quote-right"></i>
+            </button>
+            <button class="btn btn-outline-light btn-sm" aria-label="Code" type="button" onclick="code()">
+              <i class="fas fa-code"></i>
+            </button>
+            <button class="btn btn-outline-light btn-sm" aria-label="link" type="button" onclick="link()">
+              <i class="fas fa-link"></i>
+            </button>
+          </div>
+        </div>
+        <div class="collapse navbar-collapse">
+          <div class="btn-group">
+            <button class="btn btn-outline-light btn-sm" aria-label="List bulleted" type="button" onclick="bulletedList()">
+              <i class="fas fa-list"></i>
+            </button>
+            <button class="btn btn-outline-light btn-sm" aria-label="List numbered" type="button" onclick="numberedList()">
+              <i class="fas fa-list-ol"></i>
+            </button>
+            <button class="btn btn-outline-light btn-sm" aria-label="List tasks" type="button" onclick="taskList()">
+              <i class="fas fa-tasks"></i>
+            </button>
+          </div>
+        </div>
+        <div class="collapse navbar-collapse">
+            <div class="btn-group">
+              <button class="btn btn-outline-light btn-sm" aria-label="Table" type="button" onclick="table()">
+                <i class="fas fa-table"></i>
+              </button>
+            </div>
+          </div>  
+        <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button" onclick="exportHtml()">Export to html</a>
       </nav>
       <div class="row">
         <div class="col-md-6 order-md-1">
-          <div class="editor-container" id="container1">
-            <textarea class="editor-textarea" id="source-textarea" rows="3" readonly></textarea>
-          </div>
+          <div class="editor-container" id="editor-container"></div>
         </div>
         <div class="col-md-6 order-md-2">
           <div class="markdown-container markdown container"></div>
@@ -109,6 +150,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../menu.js"></script>
     <script src="lib/highlight.js/highlight.pack.js"></script>
+    <script src="lib/emoji.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
       function xhr(url) {
@@ -130,18 +172,20 @@
       var source = xhr('sample.md')
 
       // initialize source editor
-      var sourceTextarea = document.getElementById('source-textarea');
-      sourceTextarea.value = source;
-      var sourceEditor = CodeMirror.fromTextArea(sourceTextarea, {
-          lineNumbers: true,
-          autoRefresh:true,
-          mode: 'gfm'
+      var sourceEditor = CodeMirror(document.getElementById('editor-container'), {
+        value: source,
+        lineNumbers: true,
+        autoRefresh: true,
+        autofocus: true,
+        showCursorWhenSelecting: true,
+        selectionsMayTouch: true,
+        mode: 'gfm'
       });
-      sourceEditor.on("change", function(doc, changeObj) {
-        source = doc.getValue();
+      sourceEditor.on("change", function(instance, changeObj) {
+        source = instance.getValue();
         renderMarkdwon(source);
       });
-
+      
       // initialize highlight
       hljs.initHighlightingOnLoad();
 
@@ -158,10 +202,131 @@
 
       function renderMarkdwon(markdown) {
         $(".markdown-container").each(function(index, target) {
+          markdown = GitHubEmoji.replace(markdown);
           target.innerHTML = marked(markdown);
         });
       }
 
+      function getSelectedRange() {
+        let doc = sourceEditor.getDoc();
+        let head = doc.getCursor('head');
+        let anchor = doc.getCursor('anchor');
+        let from;
+        let to;
+        if (head.line < anchor.line) {
+          from = head;
+          to = anchor;
+        } else if (head.line > anchor.line) {
+          from = anchor;
+          to = head;
+        } else {
+          if (head.ch < anchor.ch) {
+            from = head;
+            to = anchor;
+          } else {
+            from = anchor;
+            to = head;
+          }
+        }
+        return { from: from, to: to };
+      }
+      
+      function replaceSelectedRange(replace) {
+        let range = getSelectedRange();
+        let from = range.from;
+        let to = range.to;
+        let doc = sourceEditor.getDoc();
+        let selected = doc.getRange(from, to);
+        doc.replaceRange(replace(selected), from, to);
+      }
+
+      function bold() {
+        replaceSelectedRange(function(selected) {
+          return `**${selected}**`;
+        });
+      }
+      function italic() {
+        replaceSelectedRange(function(selected) {
+          return `*${selected}*`;
+        });
+      }
+      function strikethrough() {
+        replaceSelectedRange(function(selected) {
+          return `~~${selected}~~`;
+        });
+      }
+      function link() {
+        replaceSelectedRange(function(selected) {
+          return `[${selected}](url)`;
+        });
+      }
+      function code() {
+        replaceSelectedRange(function(selected) {
+          if (selected.split('\n').length > 1) {
+            return `\`\`\`\n${selected}\n\`\`\``
+          }
+          return `\`${selected}\``;
+        });
+      }
+      function quote() {
+        replaceSelectedRange(function(selected) {
+          let lines = [];
+          selected.split('\n').forEach( function(value) {
+            lines.push(`> ${value}`);
+          });
+          return lines.join('\n');
+        });
+      }
+      function bulletedList() {
+        replaceSelectedRange(function(selected) {
+          let lines = [];
+          selected.split('\n').forEach( function(value) {
+            if (value.length == 0) {
+              lines.push(value);
+            } else {
+              lines.push(`- ${value}`);
+            }
+          });
+          return lines.join('\n');
+        });
+      }
+      function numberedList() {
+        replaceSelectedRange(function(selected) {
+          let lines = [];
+          selected.split('\n').forEach( function(value) {
+            if (value.length == 0) {
+              lines.push(value);
+            } else {
+              lines.push(`1. ${value}`);
+            }
+          });
+          return lines.join('\n');
+        });
+      }
+      function taskList() {
+        replaceSelectedRange(function(selected) {
+          let lines = [];
+          selected.split('\n').forEach( function(value) {
+            if (value.length == 0) {
+              lines.push(value);
+            } else {
+              lines.push(`- [x] ${value}`);
+            }
+          });
+          return lines.join('\n');
+        });
+      }
+      function table() {
+        replaceSelectedRange(function(selected) {
+          let template = `
+| Column 1  | Column 2  | Column 3  |
+|:----------|:----------|:----------|
+| Cell 1    | Cell 2    | Cell 3    |
+| Cell 1    | Cell 2    | Cell 3    |
+ `
+          return template;
+        });
+      }
       function exportHtml() {
         $(".markdown-container").each(function(index, target) {
           var style1 = xhr('css/light.css')
