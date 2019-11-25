@@ -105,7 +105,7 @@
               return response;
           }
         }).responseText;
-      }
+      };
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.18.0/min/vs/loader.js"></script>
     <script>
@@ -146,7 +146,7 @@
       function changeTheme(theme) {
         var newTheme = (theme === 1 ? 'vs-dark' : ( theme === 0 ? 'vs' : 'hc-black' ));
         monaco.editor.setTheme(newTheme);
-      }
+      };
       function renderMarkdwon(markdown) {
         $(".markdown-container").each(function(index, target) {
           target.innerHTML = marked(markdown);
@@ -158,35 +158,35 @@
           var style2 = xhr('lib/highlight.js/styles/github.css')
           var content = target.innerHTML;
           var html = `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-              <title>Markdown</title>
-              <style>
-                ${style1}
-                ${style2}
-                .markdown-container {
-                  border: 1px solid #eee;
-                  background-color: white;
-                  min-height: 480px;
-                  padding: 16px;
-                }
-              </style>
-            </head>
-            <body>
-              <div class="markdown-container markdown">
-                ${content}
-              </div>
-            </body>
-          </html>
-          `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<title>Markdown</title>
+<style>
+${style1}
+${style2}
+.markdown-container {
+  border: 1px solid #eee;
+  background-color: white;
+  min-height: 480px;
+  padding: 16px;
+}
+</style>
+</head>
+<body>
+<div class="markdown-container markdown">
+${content}
+</div>
+</body>
+</html>
+`
           var blob = new Blob([html], {'type': 'text/html'});
           var url = window.URL.createObjectURL(blob);
           document.getElementById("exportHtml").href = url;
         });
-      }
+      };
     </script>
   </body>
 </html>

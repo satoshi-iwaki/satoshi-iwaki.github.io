@@ -72,12 +72,12 @@
         <a class="navbar-brand" href="#">Markdown editor</a>
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav mr-auto">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tools</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
-                </div>
-              </li>
-            </ul>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tools</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
+              </div>
+            </li>
+          </ul>
         </div>
         <div class="collapse navbar-collapse">
           <div class="btn-group mr-2">
@@ -116,7 +116,7 @@
               <i class="fas fa-table"></i>
             </button>
           </div>
-        </div>  
+        </div>
         <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button" onclick="exportHtml()">Export to html</a>
       </nav>
       <div class="row">
@@ -201,7 +201,7 @@
           markdown = GitHubEmoji.replace(markdown);
           target.innerHTML = marked(markdown);
         });
-      }
+      };
 
       function getSelectedRange() {
         let doc = sourceEditor.getDoc();
@@ -223,9 +223,9 @@
             from = anchor;
             to = head;
           }
-        }
+        };
         return { from: from, to: to };
-      }
+      };
       
       function replaceSelectedRange(replace) {
         let range = getSelectedRange();
@@ -234,28 +234,28 @@
         let doc = sourceEditor.getDoc();
         let selected = doc.getRange(from, to);
         doc.replaceRange(replace(selected), from, to);
-      }
+      };
 
       function bold() {
         replaceSelectedRange(function(selected) {
           return `**${selected}**`;
         });
-      }
+      };
       function italic() {
         replaceSelectedRange(function(selected) {
           return `*${selected}*`;
         });
-      }
+      };
       function strikethrough() {
         replaceSelectedRange(function(selected) {
           return `~~${selected}~~`;
         });
-      }
+      };
       function link() {
         replaceSelectedRange(function(selected) {
           return `[${selected}](url)`;
         });
-      }
+      };
       function code() {
         replaceSelectedRange(function(selected) {
           if (selected.split('\n').length > 1) {
@@ -263,7 +263,7 @@
           }
           return `\`${selected}\``;
         });
-      }
+      };
       function quote() {
         replaceSelectedRange(function(selected) {
           let lines = [];
@@ -285,7 +285,7 @@
           });
           return lines.join('\n');
         });
-      }
+      };
       function numberedList() {
         replaceSelectedRange(function(selected) {
           let lines = [];
@@ -298,7 +298,7 @@
           });
           return lines.join('\n');
         });
-      }
+      };
       function taskList() {
         replaceSelectedRange(function(selected) {
           let lines = [];
@@ -311,7 +311,7 @@
           });
           return lines.join('\n');
         });
-      }
+      };
       function table() {
         replaceSelectedRange(function(selected) {
           let template = `
@@ -319,10 +319,10 @@
 |:----------|:----------|:----------|
 | Cell 1    | Cell 2    | Cell 3    |
 | Cell 1    | Cell 2    | Cell 3    |
- `
+`
           return template;
         });
-      }
+      };
       function exportHtml() {
         $(".markdown-container").each(function(index, target) {
           var style1 = xhr('css/light.css')
@@ -330,35 +330,35 @@
           
           var content = target.innerHTML;
           var html = `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-              <title>Markdown</title>
-              <style>
-                ${style1}
-                ${style2}
-                .markdown-container {
-                  border: 1px solid #eee;
-                  background-color: white;
-                  min-height: 480px;
-                  padding: 16px;
-                }
-              </style>
-            </head>
-            <body>
-              <div class="markdown-container markdown">
-                ${content}
-              </div>
-            </body>
-          </html>
-          `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<title>Markdown</title>
+<style>
+${style1}
+${style2}
+.markdown-container {
+  border: 1px solid #eee;
+  background-color: white;
+  min-height: 480px;
+  padding: 16px;
+}
+</style>
+</head>
+<body>
+<div class="markdown-container markdown">
+${content}
+</div>
+</body>
+</html>
+`
           var blob = new Blob([html], {'type': 'text/html'});
           var url = window.URL.createObjectURL(blob);
           document.getElementById("exportHtml").href = url;
         });
-      }
+      };
     </script>
   </body>
 </html>
