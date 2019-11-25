@@ -181,6 +181,26 @@
         source = instance.getValue();
         renderMarkdwon(source);
       });
+      sourceEditor.setOption('extraKeys', {
+        'Cmd-B': bold,
+        'Ctrl-B': bold,
+        'Cmd-I': italic,
+        'Ctrl-I': italic,
+        'Cmd-Ctrl--': strikethrough,
+        'Ctrl-Alt--': strikethrough,
+        'Shift-Cmd-2': quote,
+        'Shift-Ctrl-2': quote,
+        'Shift-Cmd-`': code,
+        'Shift-Ctrl-`': code,
+        'Cmd-L': link,
+        'Ctrl-L': link,
+        'Cmd-.': bulletedList,
+        'Ctrl-.': bulletedList,
+        'Cmd-/': numberedList,
+        'Ctrl-/': numberedList,
+        'Cmd-,': taskList,
+        'Ctrl-,': taskList,
+      });
       
       // initialize highlight
       hljs.initHighlightingOnLoad();
