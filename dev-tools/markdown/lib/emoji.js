@@ -2,17 +2,20 @@ const UnicodeEmoji = {};
 
 UnicodeEmoji.replace = function(markdown) {
   let output = markdown;
-  markdown.match(/(:[a-z|A-Z|0-9|+|\-|_]*:)/g).forEach( function(value) {
-    if (value.length < 3) {
-      return;
-    }
-    const key = value.slice(1, -1);
-    const code = UnicodeEmoji.emojis[key];
-    if (!code) {
-      return;
-    }
-    output = output.replace(value, code);
-  });
+  const emojis = markdown.match(/(:[a-z|A-Z|0-9|+|\-|_]*:)/g)
+  if (emojis && emojis.length > 0) {
+    emojis.forEach( function(value) {
+      if (value.length < 3) {
+        return;
+      }
+      const key = value.slice(1, -1);
+      const code = UnicodeEmoji.emojis[key];
+      if (!code) {
+        return;
+      }
+      output = output.replace(value, code);
+    });  
+  }
   return output;
 };
 
@@ -1526,18 +1529,21 @@ GitHubEmoji.download = function(url) {
 
 GitHubEmoji.replace = function(markdown) {
   let output = markdown;
-  markdown.match(/(:[a-z|A-Z|0-9|+|\-|_]*:)/g).forEach( function(value) {
-    if (value.length < 3) {
-      return;
-    }
-    const key = value.slice(1, -1);
-    const image = GitHubEmoji.emojis[key];
-    if (!image) {
-      return;
-    }
-    const tag = `<img width="15" height="15" src="${image}" alt="icon" async></img>`
-    output = output.replace(value, tag);
-  });
+  const emojis = markdown.match(/(:[a-z|A-Z|0-9|+|\-|_]*:)/g)
+  if (emojis && emojis.length > 0) {
+    emojis.forEach( function(value) {
+      if (value.length < 3) {
+        return;
+      }
+      const key = value.slice(1, -1);
+      const image = GitHubEmoji.emojis[key];
+      if (!image) {
+        return;
+      }
+      const tag = `<img width="15" height="15" src="${image}" alt="icon" async></img>`
+      output = output.replace(value, tag);
+    })
+  }
   return output;
 }
 
