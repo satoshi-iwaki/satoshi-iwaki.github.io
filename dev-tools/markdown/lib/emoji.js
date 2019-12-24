@@ -1527,6 +1527,18 @@ GitHubEmoji.download = function(url) {
   }).responseText;
 }
 
+GitHubEmoji.image = function(key) {
+  return GitHubEmoji.emojis[key];
+}
+
+GitHubEmoji.emoji = function(key) {
+  const image = GitHubEmoji.image(key);
+  if (!image) {
+    return;
+  }
+  return `<img width="15" height="15" src="${image}" alt="icon" emoji="${key}" async></img>`
+}
+
 GitHubEmoji.replace = function(markdown) {
   let output = markdown;
   const emojis = markdown.match(/(:[a-z|A-Z|0-9|+|\-|_]*:)/g)
@@ -1536,15 +1548,20 @@ GitHubEmoji.replace = function(markdown) {
         return;
       }
       const key = value.slice(1, -1);
-      const image = GitHubEmoji.emojis[key];
-      if (!image) {
+      const emoji = GitHubEmoji.emoji(key)
+      if (!emoji) {
         return;
       }
-      const tag = `<img width="15" height="15" src="${image}" alt="icon" async></img>`
-      output = output.replace(value, tag);
+      output = output.replace(value, emoji);
     })
   }
   return output;
+}
+
+GitHubEmoji.list = function(handler) {
+  let keys = Object.keys(GitHubEmoji.emojis)
+  keys = keys.sort()
+  return keys.map(key => handler(key, GitHubEmoji.image(key)))
 }
 
 GitHubEmoji.emojis = JSON.parse(GitHubEmoji.download('https://api.github.com/emojis'));

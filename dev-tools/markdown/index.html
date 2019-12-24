@@ -42,6 +42,16 @@
         height:100%;
         overflow: scroll;
       }
+      .emoji-grid {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        width: 320px;
+        height: 240px;
+        overflow: scroll;
+      }
+      .popover {
+        max-width: 380px;
+      }
       .editor-textarea {
         height: 100%;
       }
@@ -115,6 +125,9 @@
             <button class="btn btn-outline-light btn-sm" aria-label="Table" type="button" onclick="table()">
               <i class="fas fa-table"></i>
             </button>
+            <button class="btn btn-outline-light btn-sm" aria-label="Emoji" type="button" id="emoji-button" data-toggle="popover" data-placement="bottom">
+              <i class="fas fa-smile"></i>
+            </button>
           </div>
         </div>
         <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" role="button" onclick="exportHtml()">Export to html</a>
@@ -139,6 +152,15 @@
           </ul>
         </div>
       </nav>
+    </div>
+    <div class="emoji-picker" id="emoji-picker" hidden>
+      <div class="emoji-grid" id="emoji-grid">
+        <!-- 
+        <div class="emoji-grid-cell">
+          <img width="20" height="20" src="./assets/emoji/png/1f604.png" alt="icon" onclick="insertEmoji('smile')" async></img>
+        </div>
+         -->
+      </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.7.0/marked.min.js"></script>
@@ -214,6 +236,24 @@
           }
         });
         renderMarkdwon(source);
+
+        $('#emoji-grid').append(
+          GitHubEmoji.list((key, image) => {
+            return `
+<div class="emoji-grid-cell">
+<img width="24" height="24" src="${image}" alt="icon" onclick="insertEmoji('${key}')" async></img>
+</div>`
+          })
+        )
+        $('#emoji-button').popover({
+            // trigger: 'focus',
+            html: true,
+            sanitize: false,
+            content: function() {
+              return $('#emoji-picker').html()
+            }
+          }
+        )
       });
 
       function renderMarkdwon(markdown) {
@@ -343,6 +383,11 @@
           return template;
         });
       };
+      function insertEmoji(code) {
+        replaceSelectedRange(function(selected) {
+          return `:${code}:`
+        })
+      }
       function exportHtml() {
         $(".markdown-container").each(function(index, target) {
           var style1 = xhr('css/light.css')
