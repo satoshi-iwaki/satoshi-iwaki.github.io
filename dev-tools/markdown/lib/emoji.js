@@ -1536,7 +1536,7 @@ GitHubEmoji.emoji = function(key) {
   if (!image) {
     return;
   }
-  return `<img width="15" height="15" src="${image}" alt="icon" emoji="${key}" async></img>`
+  return `<img width="15" height="15" src="${image}" alt="icon" emoji="${key}" onclick="insertEmoji('${key}')" async></img>`
 }
 
 GitHubEmoji.replace = function(markdown) {
@@ -1561,7 +1561,45 @@ GitHubEmoji.replace = function(markdown) {
 GitHubEmoji.list = function(handler) {
   let keys = Object.keys(GitHubEmoji.emojis)
   keys = keys.sort()
-  return keys.map(key => handler(key, GitHubEmoji.image(key)))
+  return keys.map(key => handler(key, GitHubEmoji.emoji(key)))
 }
 
-GitHubEmoji.emojis = JSON.parse(GitHubEmoji.download('https://api.github.com/emojis'));
+GitHubEmoji.emojis = JSON.parse(GitHubEmoji.download('./github-emojis.json'));
+
+
+GoogleNotoEmoji = {}
+
+GoogleNotoEmoji.emojis = UnicodeEmoji.emojis
+
+GoogleNotoEmoji.emoji = function(key) {
+  const code = GoogleNotoEmoji.emojis[key];
+  if (!code) {
+    return;
+  }
+  return `<span style="font-family: 'NotoColorEmoji'" onclick="insertEmoji('${key}')">${code}</span>`
+}
+
+GoogleNotoEmoji.replace = function(markdown) {
+  let output = markdown;
+  const emojis = markdown.match(/(:[a-z|A-Z|0-9|+|\-|_]*:)/g)
+  if (emojis && emojis.length > 0) {
+    emojis.forEach( function(value) {
+      if (value.length < 3) {
+        return;
+      }
+      const key = value.slice(1, -1);
+      const code = GoogleNotoEmoji.emojis[key];
+      if (!code) {
+        return;
+      }
+      output = output.replace(value, `<span style="font-family: 'NotoColorEmoji'">${code}</span>`);
+    });  
+  }
+  return output;
+};
+
+GoogleNotoEmoji.list = function(handler) {
+  let keys = Object.keys(GoogleNotoEmoji.emojis)
+  keys = keys.sort()
+  return keys.map(key => handler(key, GoogleNotoEmoji.emoji(key)))
+}

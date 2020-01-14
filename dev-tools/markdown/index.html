@@ -73,9 +73,12 @@
         padding-bottom: 4.0rem;
         height: 100%;
       }
+      @font-face {
+        font-family: 'NotoColorEmoji';
+        src: url('./font/NotoColorEmoji.ttf');
+      }
     </style>
   </head>
-
   <body class="bg-light">
     <div class="container-fluid">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -188,6 +191,7 @@
     </script>
     <script>
       var source = xhr('sample.md')
+      var emoji = GitHubEmoji
 
       // initialize source editor
       var sourceEditor = CodeMirror(document.getElementById('editor-container'), {
@@ -238,10 +242,10 @@
         renderMarkdwon(source);
 
         $('#emoji-grid').append(
-          GitHubEmoji.list((key, image) => {
+          emoji.list((key, tag) => {
             return `
 <div class="emoji-grid-cell">
-<img width="24" height="24" src="${image}" alt="icon" onclick="insertEmoji('${key}')" async></img>
+${tag}
 </div>`
           })
         )
@@ -258,7 +262,7 @@
 
       function renderMarkdwon(markdown) {
         $(".markdown-container").each(function(index, target) {
-          markdown = GitHubEmoji.replace(markdown);
+          markdown = emoji.replace(markdown);
           target.innerHTML = marked(markdown);
         });
       };
