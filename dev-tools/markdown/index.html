@@ -44,7 +44,7 @@
       }
       .emoji-grid {
         display: grid;
-        grid-template-columns: repeat(10, 1fr);
+        grid-template-columns: repeat(12, 1fr);
         width: 320px;
         height: 240px;
         overflow: scroll;
@@ -64,6 +64,10 @@
       .col-md-6 {
         height: 100%;
         overflow: scroll;
+      }
+      emoji svg {
+        width: 24px;
+        height: 24px;
       }
       html {
         height: 100%;
@@ -171,7 +175,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../menu.js"></script>
     <script src="lib/highlight.js/highlight.pack.js"></script>
-    <script src="lib/emoji.js"></script>
+    <script src="lib/emoji/twitter-emoji.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
       function xhr(url) {
@@ -191,7 +195,7 @@
     </script>
     <script>
       var source = xhr('sample.md')
-      var emoji = GitHubEmoji
+      var emoji = Twemoji
 
       // initialize source editor
       var sourceEditor = CodeMirror(document.getElementById('editor-container'), {
@@ -242,10 +246,10 @@
         renderMarkdwon(source);
 
         $('#emoji-grid').append(
-          emoji.list((key, tag) => {
+          emoji.list((key, image) => {
             return `
 <div class="emoji-grid-cell">
-${tag}
+<img width="20" height="20" src="${image}" alt="icon" onclick="insertEmoji('${key}')" async></img>
 </div>`
           })
         )
@@ -262,7 +266,9 @@ ${tag}
 
       function renderMarkdwon(markdown) {
         $(".markdown-container").each(function(index, target) {
-          markdown = emoji.replace(markdown);
+          markdown = emoji.replace(markdown, (svg) => {
+            return xhr(svg)
+          });
           target.innerHTML = marked(markdown);
         });
       };
@@ -396,7 +402,6 @@ ${tag}
         $(".markdown-container").each(function(index, target) {
           var style1 = xhr('css/light.css')
           var style2 = xhr('lib/highlight.js/styles/github.css')
-          
           var content = target.innerHTML;
           var html = `<!DOCTYPE html>
 <html>
