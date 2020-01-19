@@ -69,6 +69,10 @@
         width: 24px;
         height: 24px;
       }
+      i {
+        width: 16px;
+        height: 16px;        
+      }
       html {
         height: 100%;
       }
@@ -128,7 +132,7 @@
               <i class="fas fa-tasks"></i>
             </button>
           </div>
-          <div class="btn-group">
+          <div class="btn-group mr-2">
             <button class="btn btn-outline-light btn-sm" aria-label="Table" type="button" onclick="table()">
               <i class="fas fa-table"></i>
             </button>
@@ -144,7 +148,7 @@
           <div class="editor-container" id="editor-container"></div>
         </div>
         <div class="col-md-6 order-md-2">
-          <div class="markdown-container markdown container"></div>
+          <div class="markdown-container markdown container" id="preview-container"></div>
         </div>
       </div>
       <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
@@ -184,10 +188,10 @@
           url: url,
           dataType: 'text',
           async : false,
-          success: function(response) {
+          success: (response) => {
               return response;
           },
-          error: function(response) {
+          error: (response) => {
               return response;
           }
         }).responseText;
@@ -207,7 +211,7 @@
         selectionsMayTouch: true,
         mode: 'gfm'
       });
-      sourceEditor.on("change", function(instance, changeObj) {
+      sourceEditor.on('change', (instance, changeObj) => {
         source = instance.getValue();
         renderMarkdwon(source);
       });
@@ -236,13 +240,14 @@
       hljs.initHighlightingOnLoad();
 
       // initialize marked
-      $(document).ready(function(){
-        marked.setOptions({
+      marked.setOptions({
           langPrefix: '',
-          highlight: function(code, lang) {
+          highlight: (code, lang) => {
             return hljs.highlightAuto(code, [lang]).value
           }
         });
+
+      $(document).ready(() => {
         renderMarkdwon(source);
 
         $('#emoji-grid').append(
@@ -254,18 +259,17 @@
           })
         )
         $('#emoji-button').popover({
-            // trigger: 'focus',
             html: true,
             sanitize: false,
-            content: function() {
-              return $('#emoji-picker').html()
+            content: () => {
+              return $('.emoji-picker').html()
             }
           }
         )
       });
 
       function renderMarkdwon(markdown) {
-        $(".markdown-container").each(function(index, target) {
+        $("#preview-container").each((index, target) => {
           markdown = emoji.replace(markdown, (svg) => {
             return xhr(svg)
           });
@@ -307,27 +311,27 @@
       };
 
       function bold() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           return `**${selected}**`;
         });
       };
       function italic() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           return `*${selected}*`;
         });
       };
       function strikethrough() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           return `~~${selected}~~`;
         });
       };
       function link() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           return `[${selected}](url)`;
         });
       };
       function code() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           if (selected.split('\n').length > 1) {
             return `\`\`\`\n${selected}\n\`\`\``
           }
@@ -335,18 +339,18 @@
         });
       };
       function quote() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           let lines = [];
-          selected.split('\n').forEach( function(value) {
+          selected.split('\n').forEach((value) => {
             lines.push(`> ${value}`);
           });
           return lines.join('\n');
         });
       }
       function bulletedList() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           let lines = [];
-          selected.split('\n').forEach( function(value) {
+          selected.split('\n').forEach((value) => {
             if (value.length == 0) {
               lines.push(value);
             } else {
@@ -357,9 +361,9 @@
         });
       };
       function numberedList() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           let lines = [];
-          selected.split('\n').forEach( function(value) {
+          selected.split('\n').forEach((value) => {
             if (value.length == 0) {
               lines.push(value);
             } else {
@@ -370,9 +374,9 @@
         });
       };
       function taskList() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           let lines = [];
-          selected.split('\n').forEach( function(value) {
+          selected.split('\n').forEach((value) => {
             if (value.length == 0) {
               lines.push(value);
             } else {
@@ -383,7 +387,7 @@
         });
       };
       function table() {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           let template = `
 | Column 1  | Column 2  | Column 3  |
 |:----------|:----------|:----------|
@@ -394,12 +398,12 @@
         });
       };
       function insertEmoji(code) {
-        replaceSelectedRange(function(selected) {
+        replaceSelectedRange((selected) => {
           return `:${code}:`
         })
       }
       function exportHtml() {
-        $(".markdown-container").each(function(index, target) {
+        $("#preview-container").each((index, target) => {
           var style1 = xhr('css/light.css')
           var style2 = xhr('lib/highlight.js/styles/github.css')
           var content = target.innerHTML;
@@ -417,6 +421,10 @@ ${style2}
   background-color: white;
   min-height: 480px;
   padding: 16px;
+}
+emoji svg {
+  width: 24px;
+  height: 24px;
 }
 </style>
 </head>
