@@ -34,7 +34,7 @@
         width: 100%;
         height: 100%;
       }
-      .markdown-container {
+      .preview-container {
         border: 1px solid #eee;
         background-color: white;
         padding: 16px;
@@ -242,6 +242,7 @@
       // initialize marked
       marked.setOptions({
           langPrefix: '',
+          headerIds: false,
           highlight: (code, lang) => {
             return hljs.highlightAuto(code, [lang]).value
           }
@@ -416,7 +417,7 @@
 <style>
 ${style1}
 ${style2}
-.markdown-container {
+.preview-container {
   border: 1px solid #eee;
   background-color: white;
   min-height: 480px;
@@ -429,7 +430,7 @@ emoji svg {
 </style>
 </head>
 <body>
-<div class="markdown-container markdown">
+<div class="preview-container markdown">
 ${content}
 </div>
 </body>
