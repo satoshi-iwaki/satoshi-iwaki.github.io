@@ -93,6 +93,9 @@
       </nav>
     </div>
     <script>
+      String.prototype.replaceAll = function(searchValue, replaceValue) {
+        return this.split(searchValue).join(replaceValue);
+      };
       var Base64 = {
         encode: function(plainText) {
           return btoa(unescape(encodeURIComponent(plainText)));
@@ -110,7 +113,7 @@
           var value = Base64.encode(input);
           var urlEncode = document.getElementById('urlEncode').checked;
           if (urlEncode) {
-            value = value.replace('+', '-').replace('/', '-');
+            value = value.replaceAll('+', '-').replaceAll('/', '_');
           }
           document.getElementById('base64EncoderOutput').value = value;
         } catch (error) {
@@ -124,7 +127,7 @@
         }
         var urlDecode = document.getElementById('urlDecode').checked;
         if (urlDecode) {
-          input = input.replace('-', '+').replace('-', '/');
+          input = input.replaceAll('-', '+').replaceAll('_', '/');
         }
         try {
           var value = Base64.decode(input);
