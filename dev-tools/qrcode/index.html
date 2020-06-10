@@ -73,6 +73,15 @@
       </nav>
     </div>
     <script>
+      function getParam(name) {
+        var url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+      };
       function generateQrcode() {
         var message = document.getElementById('qrcodeInput').value;
         var svgNode = QRCode({
@@ -98,7 +107,13 @@
         var url = window.URL.createObjectURL(blob);
         document.getElementById("export-qrcode").href = url;
       };
-      generateQrcode();
+      window.onload = function() {
+        var message = getParam('message');
+        if (message) {
+          document.getElementById('qrcodeInput').value = message;
+        }
+        generateQrcode();
+      };
     </script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
