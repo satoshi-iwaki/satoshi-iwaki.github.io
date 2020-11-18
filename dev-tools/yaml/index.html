@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta name="description" content="diff, merge">
-    <title>JSON and YAML converter</title>
+    <title>JSON and YAML converter / formatter</title>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!-- CodeMirror -->
@@ -66,7 +66,7 @@
   <body class="bg-light">
     <div class="container-fluid">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">JSON and YAML converter</a>
+        <a class="navbar-brand" href="#">JSON and YAML converter / formatter</a>
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
@@ -83,6 +83,12 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" id="yaml-to-json-tab" data-toggle="tab" href="#yaml-to-json-tab-pane" role="tab" aria-controls="YAML to JSON" aria-selected="false">YAML to JSON</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="json-to-json-tab" data-toggle="tab" href="#json-to-json-tab-pane" role="tab" aria-controls="JSON formatter" aria-selected="false">JSON formatter</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="yaml-to-yaml-tab" data-toggle="tab" href="#yaml-to-yaml-tab-pane" role="tab" aria-controls="YAML formatter" aria-selected="false">YAML formatter</a>
         </li>
       </ul>
       <div class="tab-content">
@@ -106,6 +112,30 @@
             </div>
             <div class="col-md-6 order-md-1">
               <div class="editor-container" id="json-preview-container">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="json-to-json-tab-pane" role="tabpanel" aria-labelledby="json-to-json-tab">
+          <div class="row">
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="json-to-json-editor-container">
+              </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="json-to-json-preview-container">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="yaml-to-yaml-tab-pane" role="tabpanel" aria-labelledby="yaml-to-yaml-tab">
+          <div class="row">
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="yaml-to-yaml-editor-container">
+              </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="yaml-to-yaml-preview-container">
               </div>
             </div>
           </div>
@@ -166,6 +196,7 @@
       var sourceYaml = jsyaml.dump(sample)
 
       // initialize source editor
+      // JSON to YAML
       var jsonEditor = CodeMirror(document.getElementById('json-editor-container'), {
         value: sourceJson,
         lineNumbers: true,
@@ -187,6 +218,8 @@
         selectionsMayTouch: true,
         mode: 'yaml'
       });
+
+      // YAML to JSON
       var yamlEditor = CodeMirror(document.getElementById('yaml-editor-container'), {
         value: sourceYaml,
         lineNumbers: true,
@@ -207,6 +240,56 @@
         readOnly: true,
         selectionsMayTouch: true,
         mode: 'javascript'
+      });
+
+      // JSON to JSON
+      var jsonToJsonEditor = CodeMirror(document.getElementById('json-to-json-editor-container'), {
+        value: sourceJson,
+        lineNumbers: true,
+        autoRefresh: true,
+        autofocus: true,
+        showCursorWhenSelecting: true,
+        selectionsMayTouch: true,
+        mode: 'javascript'
+      });
+      jsonToJsonEditor.on("change", function(instance, changeObj) {
+        source = instance.getValue();
+        let object = JSON.parse(source)
+        let json = JSON.stringify(object, null, 2)
+        jsonToJsonPreview.setValue(json)
+      });
+      var jsonToJsonPreview = CodeMirror(document.getElementById('json-to-json-preview-container'), {
+        value: sourceJson,
+        lineNumbers: true,
+        autoRefresh: true,
+        readOnly: true,
+        selectionsMayTouch: true,
+        mode: 'javascript'
+      });
+
+      // YAML to YAML
+      var yamlToYamlEditor = CodeMirror(document.getElementById('yaml-to-yaml-editor-container'), {
+        value: sourceYaml,
+        lineNumbers: true,
+        autoRefresh: true,
+        autofocus: true,
+        showCursorWhenSelecting: true,
+        selectionsMayTouch: true,
+        mode: 'yaml'
+      });
+      yamlToYamlEditor.on("change", function(instance, changeObj) {
+        source = instance.getValue();
+        let object = jsyaml.safeLoad(source)
+        let yaml = jsyaml.dump(object)
+        yamlToYamlPreview.setValue(yaml)
+      });
+      var yamlToYamlPreview = CodeMirror(document.getElementById('yaml-to-yaml-preview-container'), {
+        value: sourceYaml,
+        lineNumbers: true,
+        autoRefresh: true,
+        readOnly: true,
+        selectionsMayTouch: true,
+        mode: 'yaml'
       });
 
       function covertToYaml(json) {
