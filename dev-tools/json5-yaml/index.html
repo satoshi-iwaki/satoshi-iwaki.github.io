@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144024189-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-144024189-1');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="JSON5, YAML">
+    <title>JSON5 and YAML converter / formatter</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.54.0/codemirror.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.54.0/addon/merge/merge.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.54.0/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.54.0/addon/display/autorefresh.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.54.0/addon/mode/overlay.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.54.0/mode/javascript/javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.54.0/mode/yaml/yaml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/esprima/2.7.3/esprima.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.13.1/js-yaml.min.js"></script>
+    <script src="https://unpkg.com/json5@^2.0.0/dist/index.min.js"></script>
+
+    <style>
+      .CodeMirror {
+        height: 100%;
+      }
+      .editor-container {
+        border: 1px solid #eee;
+        width: 100%;
+        height: 100%;
+      }
+      .editor-textarea {
+        height: 100%;
+      }
+      .container-fluid {
+        height: 100%;
+      }
+      .row {
+        height: 100%;
+      }
+      .col-md-6 {
+        height: 100%;
+        overflow: scroll;
+      }
+      .tab-content {
+        height: 100%;
+      }
+      .tab-pane {
+        height: 100%;
+      }
+      html {
+        height: 100%;
+      }
+      body {
+        padding-top: 4.5rem;
+        padding-bottom: 6.0rem;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body class="bg-light">
+    <div class="container-fluid">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">JSON5 and YAML converter / formatter</a>
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tools</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="json-to-yaml-tab" data-toggle="tab" href="#json-to-yaml-tab-pane" role="tab" aria-controls="JSON5 to YAML" aria-selected="true">JSON5 to YAML</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="yaml-to-json-tab" data-toggle="tab" href="#yaml-to-json-tab-pane" role="tab" aria-controls="YAML to JSON5" aria-selected="false">YAML to JSON5</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="json-to-json-tab" data-toggle="tab" href="#json-to-json-tab-pane" role="tab" aria-controls="JSON5 formatter" aria-selected="false">JSON5 formatter</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="yaml-to-yaml-tab" data-toggle="tab" href="#yaml-to-yaml-tab-pane" role="tab" aria-controls="YAML formatter" aria-selected="false">YAML formatter</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="json-to-yaml-tab-pane" role="tabpanel" aria-labelledby="json-to-yaml-tab">
+          <div class="row">
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="json-editor-container">
+              </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="yaml-preview-container">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="yaml-to-json-tab-pane" role="tabpanel" aria-labelledby="yaml-to-json-tab">
+          <div class="row">
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="yaml-editor-container">
+              </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="json-preview-container">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="json-to-json-tab-pane" role="tabpanel" aria-labelledby="json-to-json-tab">
+          <div class="row">
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="json-to-json-editor-container">
+              </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="json-to-json-preview-container">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="yaml-to-yaml-tab-pane" role="tabpanel" aria-labelledby="yaml-to-yaml-tab">
+          <div class="row">
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="yaml-to-yaml-editor-container">
+              </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+              <div class="editor-container" id="yaml-to-yaml-preview-container">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="https://iwaki.info/dev-tools">&copy; 2019 iwaki.info <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Privacy</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="../menu.js"></script>
+    <script>
+      function xhr(url) {
+        return $.ajax({
+          type: 'GET',
+          url: url,
+          dataType: 'text',
+          async : false,
+          success: function(response) {
+              return response;
+          },
+          error: function(response) {
+              return response;
+          }
+        }).responseText;
+      }
+    </script>
+    <script>
+      var sample = {
+        feed: {
+          title: 'Sample'
+        },
+        results: [
+          {
+            id: 12345,
+            name: 'Name 1',
+            kind: "Kind 1",
+          },
+          {
+            id: 67890,
+            name: 'Name 2',
+            kind: "Kind 2",
+          }
+        ]
+      }
+      var sampleJson5 = `{
+  // comments
+  unquoted: 'and you can quote me on that',
+  singleQuotes: 'I can use "double quotes" here',
+  lineBreaks: "Look, Mom! \
+No \\n's!",
+  hexadecimal: 0xdecaf,
+  leadingDecimalPoint: .8675309, andTrailing: 8675309.,
+  positiveSign: +1,
+  trailingComma: 'in objects', andIn: ['arrays',],
+  "backwardsCompatible": "with JSON",
+}
+      `
+      var sampleYaml = `unquoted: and you can quote me on that
+singleQuotes: I can use "double quotes" here
+lineBreaks: |-
+  Look, Mom! No 
+  's!
+hexadecimal: 912559
+leadingDecimalPoint: 0.8675309
+andTrailing: 8675309
+positiveSign: 1
+trailingComma: in objects
+andIn:
+  - arrays
+backwardsCompatible: with JSON
+`
+      var sourceJson = sampleJson5
+      var sourceYaml = sampleYaml
+
+      // initialize source editor
+      // JSON5 to YAML
+      var jsonEditor = CodeMirror(document.getElementById('json-editor-container'), {
+        value: sourceJson,
+        lineNumbers: true,
+        autoRefresh: true,
+        autofocus: true,
+        showCursorWhenSelecting: true,
+        selectionsMayTouch: true,
+        mode: 'javascript'
+      });
+      jsonEditor.on("change", function(instance, changeObj) {
+        source = instance.getValue();
+        covertToYaml(source)
+      });
+      var yamlPreview = CodeMirror(document.getElementById('yaml-preview-container'), {
+        value: sourceYaml,
+        lineNumbers: true,
+        autoRefresh: true,
+        readOnly: true,
+        selectionsMayTouch: true,
+        mode: 'yaml'
+      });
+
+      // YAML to JSON5
+      var yamlEditor = CodeMirror(document.getElementById('yaml-editor-container'), {
+        value: sourceYaml,
+        lineNumbers: true,
+        autoRefresh: true,
+        autofocus: true,
+        showCursorWhenSelecting: true,
+        selectionsMayTouch: true,
+        mode: 'yaml'
+      });
+      yamlEditor.on("change", function(instance, changeObj) {
+        source = instance.getValue();
+        covertToJson(source)
+      });
+      var jsonPreview = CodeMirror(document.getElementById('json-preview-container'), {
+        value: sourceJson,
+        lineNumbers: true,
+        autoRefresh: true,
+        readOnly: true,
+        selectionsMayTouch: true,
+        mode: 'javascript'
+      });
+
+      // JSON5 to JSON5
+      var jsonToJsonEditor = CodeMirror(document.getElementById('json-to-json-editor-container'), {
+        value: sourceJson,
+        lineNumbers: true,
+        autoRefresh: true,
+        autofocus: true,
+        showCursorWhenSelecting: true,
+        selectionsMayTouch: true,
+        mode: 'javascript'
+      });
+      jsonToJsonEditor.on("change", function(instance, changeObj) {
+        source = instance.getValue();
+        let object = JSON5.parse(source)
+        let json = JSON5.stringify(object, null, 2)
+        jsonToJsonPreview.setValue(json)
+      });
+      var jsonToJsonPreview = CodeMirror(document.getElementById('json-to-json-preview-container'), {
+        value: sourceJson,
+        lineNumbers: true,
+        autoRefresh: true,
+        readOnly: true,
+        selectionsMayTouch: true,
+        mode: 'javascript'
+      });
+
+      // YAML to YAML
+      var yamlToYamlEditor = CodeMirror(document.getElementById('yaml-to-yaml-editor-container'), {
+        value: sourceYaml,
+        lineNumbers: true,
+        autoRefresh: true,
+        autofocus: true,
+        showCursorWhenSelecting: true,
+        selectionsMayTouch: true,
+        mode: 'yaml'
+      });
+      yamlToYamlEditor.on("change", function(instance, changeObj) {
+        source = instance.getValue();
+        let object = jsyaml.safeLoad(source)
+        let yaml = jsyaml.dump(object)
+        yamlToYamlPreview.setValue(yaml)
+      });
+      var yamlToYamlPreview = CodeMirror(document.getElementById('yaml-to-yaml-preview-container'), {
+        value: sourceYaml,
+        lineNumbers: true,
+        autoRefresh: true,
+        readOnly: true,
+        selectionsMayTouch: true,
+        mode: 'yaml'
+      });
+
+      function covertToYaml(json) {
+        let object = JSON5.parse(json)
+        let yaml = jsyaml.dump(object)
+        yamlPreview.setValue(yaml)
+      }
+
+      function covertToJson(yaml) {
+        let object = jsyaml.safeLoad(yaml)
+        let json = JSON5.stringify(object, null, 2)
+        jsonPreview.setValue(json)
+      }
+    </script>
+  </body>
+</html>
