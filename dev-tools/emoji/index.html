@@ -129,7 +129,6 @@
       }
     </script>
     <script>
-      // https://github.com/github/gemoji/blob/master/db/emoji.json
       var emojis = JSON.parse(xhr("https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json"))
 
       var source = createEmojiSample();
@@ -188,7 +187,7 @@
         let unicode = getUnicode(emoji).join("-")
         return `https://github.githubassets.com/images/icons/emoji/unicode/${unicode}.png?v8`
       }
-      // https://github.com/twitter/twemoji
+
       function getTwemojiUrl(emoji) {
         let unicode = getUnicode(emoji).join("-")
         return `https://twemoji.maxcdn.com/v/latest/72x72/${unicode}.png`
@@ -216,30 +215,27 @@
         categories.forEach((category) => {
           markdown.push("")
           markdown.push(`## ${category}`)
-          markdown.push("| Alias | Font | Gemoji(GitHub) | Twemoji(Twitter) | Unicode | Unicode version |");
-          markdown.push("|-------|------|----------------|------------------|---------|-----------------|");
+          markdown.push("| Alias | Emoji Font | GitHub(Gemoji) | Twitter(Twemoji) | Unicode | Unicode version |");
+          markdown.push("|-------|------------|----------------|------------------|---------|-----------------|");
           getEmojisByCategory(category).forEach((emoji) => {
             let emojiAlias = emoji.aliases.map((element) => {
               return `\`:${element}:\``
             }).join("<br>")
-            // let emojiText = emoji.aliases.map((element) => {
-            //   return `:${element}:`
-            // }).join("<br>")
             let emojiText = emoji.emoji;
             let unicode = getCodeUnits(emoji.emoji).map((element) => {
               return `0x${element}`
             }).join(", ")
             let unicodeVersion = emoji.unicode_version
 
-            let gemoji = isExist(getTwemojiUrl(emoji)) ? `<img src="${getGemojiUrl(emoji)}" width="24px">` : "None"
-            let twemoji = isExist(getTwemojiUrl(emoji)) ? `<img src="${getTwemojiUrl(emoji)}" width="24px">` : "None"
+            let gemoji = isExist(getTwemojiUrl(emoji)) ? `<img src="${getGemojiUrl(emoji)}" width="24px" onerror="this.style.display='none'">` : "None"
+            let twemoji = isExist(getTwemojiUrl(emoji)) ? `<img src="${getTwemojiUrl(emoji)}" width="24px" onerror="this.style.display='none'">` : "None"
             markdown.push(`|${emojiAlias}|${emojiText}|${gemoji}|${twemoji}|\`${unicode}\`|${unicodeVersion}|`);
           })
         })
         return markdown.join("\n");
       }
 
-      function exportHtml() {
+      function exportMarkdown() {
         $("#preview-container").each((index, target) => {
           var blob = new Blob([source], {'type': 'text/plan'});
           var url = window.URL.createObjectURL(blob);
