@@ -23,58 +23,58 @@
   <body class="bg-light">
     <div class="container-fluid">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">Base64 encoder and decoder</a>
+        <a class="navbar-brand" href="../index.html">Development tools</a>
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav mr-auto">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tools</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
-                </div>
-              </li>
-            </ul>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Base64 encoder and decoder</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
+              </div>
+            </li>
+          </ul>
         </div>
       </nav>
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="base64encoder-tab" data-toggle="tab" href="#base64encoder" role="tab" aria-controls="base64 encoder" aria-selected="true">Base64 encoder</a>
+          <a class="nav-link active" id="base64-encoder-tab" data-toggle="tab" href="#base64-encoder" role="tab" aria-controls="base64 encoder" aria-selected="true">Base64 encoder</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="base64decoder-tab" data-toggle="tab" href="#base64decoder" role="tab" aria-controls="base64 decoder" aria-selected="false">Base64 decoder</a>
+          <a class="nav-link" id="base64-decoder-tab" data-toggle="tab" href="#base64-decoder" role="tab" aria-controls="base64 decoder" aria-selected="false">Base64 decoder</a>
         </li>
       </ul>
       <div class="tab-content">
-        <div class="tab-pane fade show active" id="base64encoder" role="tabpanel" aria-labelledby="base64encoder-tab">
+        <div class="tab-pane fade show active" id="base64-encoder" role="tabpanel" aria-labelledby="base64-encoder-tab">
           <div class="form-group">
-            <label for="base64EncoderInput">Plain text:</label>
-            <textarea class="form-control" id="base64EncoderInput" rows="3"></textarea>
+            <label for="base64-encoder-input">Plain text:</label>
+            <textarea class="form-control" id="base64-encoder-input" rows="3"></textarea>
           </div>
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="urlEncode">
-            <label class="form-check-label" for="urlEncode">URL and filename safe alphabet (<a href="https://tools.ietf.org/html/rfc4648#section-5">RFC 4648 section 5</a>)</label>
+            <input type="checkbox" class="form-check-input" id="url-encode">
+            <label class="form-check-label" for="url-encode">URL and filename safe alphabet (<a href="https://tools.ietf.org/html/rfc4648#section-5">RFC 4648 section 5</a>)</label>
           </div>
           <div class="text-right">
             <button type="button" class="btn btn-primary" onclick="base64Encode()">Base64 encode</button>
           </div>
           <div class="form-group">
-            <label for="base64EncoderOutput">Base64 encoded:</label>
-            <textarea class="form-control" id="base64EncoderOutput" rows="3" readonly></textarea>
+            <label for="base64-encoder-output">Base64 encoded:</label>
+            <textarea class="form-control" id="base64-encoder-output" rows="3" readonly></textarea>
           </div>
         </div>
-        <div class="tab-pane fade" id="base64decoder" role="tabpanel" aria-labelledby="base64decoder-tab">
+        <div class="tab-pane fade" id="base64-decoder" role="tabpanel" aria-labelledby="base64-decoder-tab">
           <div class="form-group">
-            <label for="base64DecoderInput">Base64 encoded:</label>
-            <textarea class="form-control" id="base64DecoderInput" rows="3"></textarea>
+            <label for="base64-decoder-input">Base64 encoded:</label>
+            <textarea class="form-control" id="base64-decoder-input" rows="3"></textarea>
           </div>
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="urlDecode">
-            <label class="form-check-label" for="urlDecode">URL and filename safe alphabet (<a href="https://tools.ietf.org/html/rfc4648#section-5">RFC 4648 section 5</a>)</label>
+            <input type="checkbox" class="form-check-input" id="url-decode">
+            <label class="form-check-label" for="url-decode">URL and filename safe alphabet (<a href="https://tools.ietf.org/html/rfc4648#section-5">RFC 4648 section 5</a>)</label>
           </div>
           <div class="text-right">
             <button type="button" class="btn btn-primary" onclick="base64Dencode()">Base64 decode</button>
           </div>
           <div class="form-group">
-            <label for="base64DecoderOutput">Plain text:</label>
-            <textarea class="form-control" id="base64DecoderOutput" rows="3" readonly></textarea>
+            <label for="base64-decoder-output">Plain text:</label>
+            <textarea class="form-control" id="base64-decoder-output" rows="3" readonly></textarea>
           </div>
         </div>
       </div>
@@ -104,33 +104,33 @@
         }
       };
       function base64Encode() {
-        var input = document.getElementById('base64EncoderInput').value;
+        var input = document.getElementById('base64-encoder-input').value;
         if (input.length == 0) {
           return
         }
         try {
           var value = Base64.encode(input);
-          var urlEncode = document.getElementById('urlEncode').checked;
+          var urlEncode = document.getElementById('url-encode').checked;
           if (urlEncode) {
             value = value.replaceAll('+', '-').replaceAll('/', '_');
           }
-          document.getElementById('base64EncoderOutput').value = value;
+          document.getElementById('base64-encoder-output').value = value;
         } catch (error) {
           alert('Faild to Base64 encode.\n' + error);
         }
       }
       function base64Dencode() {
-        var input = document.getElementById('base64DecoderInput').value;
+        var input = document.getElementById('base64-decoder-input').value;
         if (input.length == 0) {
           return
         }
-        var urlDecode = document.getElementById('urlDecode').checked;
+        var urlDecode = document.getElementById('url-decode').checked;
         if (urlDecode) {
           input = input.replaceAll('-', '+').replaceAll('_', '/');
         }
         try {
           var value = Base64.decode(input);
-          document.getElementById('base64DecoderOutput').value = value
+          document.getElementById('base64-decoder-output').value = value
         } catch (error) {
           alert('Faild to Base64 decode.\n' + error);
         }
@@ -139,6 +139,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <script src="../menu.js"></script>
+    <script src="../common/menu.js"></script>
   </body>
 </html>

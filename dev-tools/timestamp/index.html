@@ -23,76 +23,76 @@
   <body class="bg-light">
     <div class="container-fluid">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">UNIX timestamp conveter</a>
+        <a class="navbar-brand" href="../index.html">Development tools</a>
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav mr-auto">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tools</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
-                </div>
-              </li>
-            </ul>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">UNIX timestamp conveter</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
+              </div>
+            </li>
+          </ul>
         </div>
       </nav>
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="timestamp-converter-tab" data-toggle="tab" href="#timestampConverter" role="tab" aria-controls="UNIX timestamp to human-readable date" aria-selected="true">UNIX timestamp to human-readable date</a>
+          <a class="nav-link active" id="timestamp-converter-tab" data-toggle="tab" href="#timestamp-converter" role="tab" aria-controls="UNIX timestamp to human-readable date" aria-selected="true">UNIX timestamp to human-readable date</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="dateConverter-tab" data-toggle="tab" href="#dateConverter" role="tab" aria-controls="Human-readable date to UNIX timestamp" aria-selected="false">Human-readable date to UNIX timestamp</a>
+          <a class="nav-link" id="date-converter-tab" data-toggle="tab" href="#date-converter" role="tab" aria-controls="Human-readable date to UNIX timestamp" aria-selected="false">Human-readable date to UNIX timestamp</a>
         </li>
       </ul>
       <div class="tab-content">
-        <div class="tab-pane fade show active" id="timestampConverter" role="tabpanel" aria-labelledby="timestampConverter-tab">
+        <div class="tab-pane fade show active" id="timestamp-converter" role="tabpanel" aria-labelledby="timestamp-converter-tab">
           <div class="form-group">
-            <label for="timestampInput">UNIX timestamp:</label>
-            <textarea class="form-control" id="timestampInput" rows="3"></textarea>
+            <label for="timestamp-input">UNIX timestamp:</label>
+            <textarea class="form-control" id="timestamp-input" rows="3"></textarea>
           </div>
           <div class="text-right">
             <button type="button" class="btn btn-primary" onclick="convertToHumanReadableDate()">Convert</button>
           </div>
           <div class="form-group">
-            <label for="timestampOutput">Human-readable date:</label>
-            <textarea class="form-control" id="timestampOutput" rows="3" readonly></textarea>
+            <label for="timestamp-output">Human-readable date:</label>
+            <textarea class="form-control" id="timestamp-output" rows="3" readonly></textarea>
           </div>
           <div class="form-group">
-            <label for="timestampLocalOutput">Human-readable date (loacal time):</label>
-            <textarea class="form-control" id="timestampLocalOutput" rows="3" readonly></textarea>
+            <label for="timestamp-local-output">Human-readable date (loacal time):</label>
+            <textarea class="form-control" id="timestamp-local-output" rows="3" readonly></textarea>
           </div>
           <div class="form-group">
-            <label for="timestampUtcOutput">Human-readable date (UTC):</label>
-            <textarea class="form-control" id="timestampUtcOutput" rows="3" readonly></textarea>
+            <label for="timestamp-utc-output">Human-readable date (UTC):</label>
+            <textarea class="form-control" id="timestamp-utc-output" rows="3" readonly></textarea>
           </div>
         </div>
-        <div class="tab-pane fade" id="dateConverter" role="tabpanel" aria-labelledby="dateConverter-tab">
+        <div class="tab-pane fade" id="date-converter" role="tabpanel" aria-labelledby="date-converter-tab">
           <div class="form-row">
             <div class="form-group col-md-2">
-              <label for="inputYear">Year</label>
-              <input type="text" class="form-control" id="dateInputYear">
+              <label for="date-input-year">Year</label>
+              <input type="text" class="form-control" id="date-input-year">
             </div>
             <div class="form-group col-md-1">
-              <label for="inputMonth">Month</label>
-              <input type="text" class="form-control" id="dateInputMonth">
+              <label for="date-input-month">Month</label>
+              <input type="text" class="form-control" id="date-input-month">
             </div>
             <div class="form-group col-md-1">
-              <label for="inputDay">Day</label>
-              <input type="text" class="form-control" id="dateInputDay">
+              <label for="date-input-day">Day</label>
+              <input type="text" class="form-control" id="date-input-day">
             </div>
             <div class="form-group col-md-1">
-              <label for="inputHours">Hours</label>
-              <input type="text" class="form-control" id="dateInputHours">
+              <label for="date-Input-hours">Hours</label>
+              <input type="text" class="form-control" id="date-Input-hours">
             </div>
             <div class="form-group col-md-1">
-              <label for="inputMinutes">Minutes</label>
-              <input type="text" class="form-control" id="dateInputMinutes">
+              <label for="date-input-minutes">Minutes</label>
+              <input type="text" class="form-control" id="date-input-minutes">
             </div>
             <div class="form-group col-md-1">
-              <label for="inputSeconds">Seconds</label>
-              <input type="text" class="form-control" id="dateInputSeconds">
+              <label for="date-input-seconds">Seconds</label>
+              <input type="text" class="form-control" id="date-input-seconds">
             </div>
             <div class="form-group col-md-2">
-              <label for="inputTimezone">Timezone</label>
-              <select class="form-control" id="dateInputTimezone">
+              <label for="date-input-timezone">Timezone</label>
+              <select class="form-control" id="date-input-timezone">
                 <option>Local time</option>
                 <option>UTC</option>
               </select>
@@ -102,8 +102,8 @@
             <button type="button" class="btn btn-primary" onclick="convertToTimestamp()">Convert</button>
           </div>
           <div class="form-group">
-            <label for="dateOutput">UNIX timestamp:</label>
-            <textarea class="form-control" id="dateOutput" rows="3" readonly></textarea>
+            <label for="date-output">UNIX timestamp:</label>
+            <textarea class="form-control" id="date-output" rows="3" readonly></textarea>
           </div>
         </div>
       </div>
@@ -126,48 +126,48 @@
         return value.slice(-2);
       }
       function convertToHumanReadableDate() {
-        var timestamp = document.getElementById('timestampInput').value;
+        var timestamp = document.getElementById('timestamp-input').value;
         var epoch = parseInt(timestamp) * 1000;
         var date = new Date(epoch);
         var timezone = date.getTimezoneOffset() * -1;
         var timezoneSign = timezone > 0 ? '+' : ''
-        document.getElementById('timestampOutput').value = date.toString();
-        document.getElementById('timestampUtcOutput').value = date.toUTCString();
-        document.getElementById('timestampLocalOutput').value = date.toLocaleString() + ' GMT ' +  timezoneSign + padding(timezone / 60) + ':' + padding(timezone % 60);
+        document.getElementById('timestamp-output').value = date.toString();
+        document.getElementById('timestamp-utc-output').value = date.toUTCString();
+        document.getElementById('timestamp-local-output').value = date.toLocaleString() + ' GMT ' +  timezoneSign + padding(timezone / 60) + ':' + padding(timezone % 60);
       };
       function convertToTimestamp() {
-        var year = document.getElementById('dateInputYear').value;
-        var month = document.getElementById('dateInputMonth').value - 1;
-        var day = document.getElementById('dateInputDay').value;
-        var hours = document.getElementById('dateInputHours').value;
-        var minutes = document.getElementById('dateInputMinutes').value;
-        var seconds = document.getElementById('dateInputSeconds').value;
+        var year = document.getElementById('date-input-year').value;
+        var month = document.getElementById('date-input-month').value - 1;
+        var day = document.getElementById('date-input-day').value;
+        var hours = document.getElementById('date-Input-hours').value;
+        var minutes = document.getElementById('date-input-minutes').value;
+        var seconds = document.getElementById('date-input-seconds').value;
 
-        var timezone = document.getElementById('dateInputTimezone');
+        var timezone = document.getElementById('date-input-timezone');
         if (timezone.options[timezone.selectedIndex].value == 'UTC') {
           var date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
         } else {
           var date = new Date(year, month, day, hours, minutes, seconds);
         }
         var humanReadableDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
-        document.getElementById('dateOutput').value = parseInt(date.getTime() / 1000);
+        document.getElementById('date-output').value = parseInt(date.getTime() / 1000);
       };
 
       window.onload = function() {
         var date = new Date();
-        document.getElementById('timestampInput').value = parseInt(date.getTime() / 1000);
+        document.getElementById('timestamp-input').value = parseInt(date.getTime() / 1000);
 
-        var year = document.getElementById('dateInputYear').value = date.getFullYear();
-        var month = document.getElementById('dateInputMonth').value = date.getMonth() + 1;
-        var day = document.getElementById('dateInputDay').value = date.getDate();
-        var hours = document.getElementById('dateInputHours').value = date.getHours();
-        var minutes = document.getElementById('dateInputMinutes').value = date.getMinutes();
-        var seconds = document.getElementById('dateInputSeconds').value = date.getSeconds();
+        var year = document.getElementById('date-input-year').value = date.getFullYear();
+        var month = document.getElementById('date-input-month').value = date.getMonth() + 1;
+        var day = document.getElementById('date-input-day').value = date.getDate();
+        var hours = document.getElementById('date-Input-hours').value = date.getHours();
+        var minutes = document.getElementById('date-input-minutes').value = date.getMinutes();
+        var seconds = document.getElementById('date-input-seconds').value = date.getSeconds();
       }
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <script src="../menu.js"></script>
+    <script src="../common/menu.js"></script>
   </body>
 </html>

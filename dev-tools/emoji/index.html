@@ -15,12 +15,9 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/light.css">
-    <link rel="stylesheet" href='lib/highlight.js/styles/github.css'></link>
+    <link rel="stylesheet" href="../common/css/light.css">
+    <link rel="stylesheet" href='../common/lib/highlight.js/styles/github.css'></link>
     <style>
-      .CodeMirror {
-        height: 100%;
-      }
       .preview-container {
         border: 1px solid #eee;
         background-color: white;
@@ -28,18 +25,6 @@
         width: 100%;
         height: 100%;
         overflow: scroll;
-      }
-      .popover {
-        max-width: 1000px;
-      }
-      .container-fluid {
-        height: 100%;
-      }
-      .tab-content {
-        height: 100%;
-      }
-      .tab-pane {
-        height: 100%;
       }
       .row {
         height: 100%;
@@ -64,26 +49,22 @@
         padding-bottom: 4.0rem;
         height: 100%;
       }
-      @font-face {
-        font-family: 'NotoColorEmoji';
-        src: url('./font/NotoColorEmoji.ttf');
-      }
     </style>
   </head>
   <body class="bg-light">
     <div class="container-fluid">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">Emoji cheat sheet</a>
+        <a class="navbar-brand" href="../index.html">Development tools</a>
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tools</a>
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Emoji cheat sheet</a>
               <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
               </div>
             </li>
           </ul>
         </div>
-        <a class="btn btn-primary" id="exportMarkdown" role="button" href="#" download="emoji.md" onclick="exportMarkdown()">Export to markdown</a>
+        <a class="btn btn-primary" id="export-markdown" role="button" href="#" download="emoji.md" onclick="exportMarkdown()">Export to markdown</a>
       </nav>
       <div class="row">
         <div class="col-md-12 order-md-1">
@@ -107,8 +88,8 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.7.0/marked.min.js"></script>
-    <script src="../menu.js"></script>
-    <script src="lib/highlight.js/highlight.pack.js"></script>
+    <script src="../common/menu.js"></script>
+    <script src="../common/lib/highlight.js/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
       function xhr(url) {
@@ -127,8 +108,8 @@
       }
     </script>
     <script>
+      // https://github.com/github/gemoji/blob/master/db/emoji.json
       var emojis = JSON.parse(xhr("https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json"))
-
       var source = createEmojiSample();
 
       // initialize highlight
@@ -176,19 +157,20 @@
       function getUnicode(emoji) {
         let variationSelector16 = "fe0f"
         let unicode = getCodePoints(emoji.emoji).filter((element) => {
-          return element != variationSelector16
+          return element != variationSelector16;
         });
         return unicode;
       }
 
       function getGemojiUrl(emoji) {
         let unicode = getUnicode(emoji).join("-")
-        return `https://github.githubassets.com/images/icons/emoji/unicode/${unicode}.png?v8`
+        return `https://github.githubassets.com/images/icons/emoji/unicode/${unicode}.png?v8`;
       }
-
+      
+      // https://github.com/twitter/twemoji
       function getTwemojiUrl(emoji) {
         let unicode = getUnicode(emoji).join("-")
-        return `https://twemoji.maxcdn.com/v/latest/72x72/${unicode}.png`
+        return `https://twemoji.maxcdn.com/v/latest/72x72/${unicode}.png`;
       }
 
       function isExist(url) {
@@ -209,24 +191,23 @@
         ];
 
         var markdown = [];
-        markdown.push("# Emoji cheat sheet");
+        markdown.push('# Emoji cheat sheet');
         categories.forEach((category) => {
-          markdown.push("")
-          markdown.push(`## ${category}`)
-          markdown.push("| Alias | Emoji Font | GitHub(Gemoji) | Twitter(Twemoji) | Unicode | Unicode version |");
-          markdown.push("|-------|------------|----------------|------------------|---------|-----------------|");
+          markdown.push('');
+          markdown.push(`## ${category}`);
+          markdown.push('| Alias | Emoji Font | GitHub(Gemoji) | Twitter(Twemoji) | Unicode | Unicode version |');
+          markdown.push('|-------|------------|----------------|------------------|---------|-----------------|');
           getEmojisByCategory(category).forEach((emoji) => {
             let emojiAlias = emoji.aliases.map((element) => {
-              return `\`:${element}:\``
-            }).join("<br>")
+              return `\`:${element}:\``;
+            }).join('<br>');
             let emojiText = emoji.emoji;
             let unicode = getCodeUnits(emoji.emoji).map((element) => {
-              return `0x${element}`
-            }).join(", ")
-            let unicodeVersion = emoji.unicode_version
-
-            let gemoji = isExist(getTwemojiUrl(emoji)) ? `<img src="${getGemojiUrl(emoji)}" width="24px" onerror="this.style.display='none'">` : "None"
-            let twemoji = isExist(getTwemojiUrl(emoji)) ? `<img src="${getTwemojiUrl(emoji)}" width="24px" onerror="this.style.display='none'">` : "None"
+              return `0x${element}`;
+            }).join(', ');
+            let unicodeVersion = emoji.unicode_version;
+            let gemoji = isExist(getTwemojiUrl(emoji)) ? `<img src="${getGemojiUrl(emoji)}" width="24px" onerror="this.style.display='none'">` : 'None';
+            let twemoji = isExist(getTwemojiUrl(emoji)) ? `<img src="${getTwemojiUrl(emoji)}" width="24px" onerror="this.style.display='none'">` : 'None';
             markdown.push(`|${emojiAlias}|${emojiText}|${gemoji}|${twemoji}|\`${unicode}\`|${unicodeVersion}|`);
           })
         })
@@ -234,10 +215,10 @@
       }
 
       function exportMarkdown() {
-        $("#preview-container").each((index, target) => {
+        $('#preview-container').each((index, target) => {
           var blob = new Blob([source], {'type': 'text/plan'});
           var url = window.URL.createObjectURL(blob);
-          document.getElementById("exportMarkdown").href = url;
+          document.getElementById('export-markdown').href = url;
         });
       };
     </script>

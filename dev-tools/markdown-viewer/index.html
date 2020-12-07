@@ -15,8 +15,8 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/light.css">
-    <link rel="stylesheet" href='lib/highlight.js/styles/github.css'></link>
+    <link rel="stylesheet" href="../common/css/light.css">
+    <link rel="stylesheet" href='../common/lib/highlight.js/styles/github.css'></link>
     <style>
       .CodeMirror {
         height: 100%;
@@ -70,11 +70,11 @@
   <body class="bg-light">
     <div class="container-fluid">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">Markdown viewer</a>
+        <a class="navbar-brand" href="../index.html">Development tools</a>
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tools</a>
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Markdown viewer</a>
               <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
               </div>
             </li>
@@ -110,9 +110,9 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.7.0/marked.min.js"></script>
-    <script src="../menu.js"></script>
-    <script src="lib/highlight.js/highlight.pack.js"></script>
-    <script src="lib/emoji/twitter-emoji.js"></script>
+    <script src="../common/menu.js"></script>
+    <script src="../common/lib/highlight.js/highlight.pack.js"></script>
+    <script src="../common/lib/emoji/twitter-emoji.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
       function xhr(url) {
@@ -131,7 +131,7 @@
       }
     </script>
     <script>
-      var sample = "https://iwaki.info/dev-tools/markdown-viewer/sample.md";
+      var sample = 'https://iwaki.info/dev-tools/markdown-viewer/sample.md';
 
       // initialize highlight
       hljs.initHighlightingOnLoad();
@@ -166,7 +166,7 @@
       };
 
       function exportHtml() {
-        $("#preview-container").each((index, target) => {
+        $('#preview-container').each((index, target) => {
           var style1 = xhr('css/light.css')
           var style2 = xhr('lib/highlight.js/styles/github.css')
           var content = target.innerHTML;
@@ -200,7 +200,7 @@ ${content}
 `
           var blob = new Blob([html], {'type': 'text/html'});
           var url = window.URL.createObjectURL(blob);
-          document.getElementById("exportHtml").href = url;
+          document.getElementById('exportHtml').href = url;
         });
       };
     </script>
