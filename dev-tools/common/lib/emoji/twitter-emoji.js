@@ -5,7 +5,7 @@ Twemoji.png = function(key) {
   if (!code) {
     return;
   }
-  return `./assets/emoji/png/${code.join('-')}.png`;
+  return `../common/assets/emoji/png/${code.join('-')}.png`;
 }
 
 Twemoji.svg = function(key) {
@@ -13,7 +13,7 @@ Twemoji.svg = function(key) {
   if (!code) {
     return;
   }
-  return `./assets/emoji/svg/${code.join('-')}.svg`;
+  return `../common/assets/emoji/svg/${code.join('-')}.svg`;
 }
 
 Twemoji.image = function(key) {
