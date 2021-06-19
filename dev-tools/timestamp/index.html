@@ -49,14 +49,12 @@
           </div>
         </div>
       </nav>
-      <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="timestamp-converter-tab" data-toggle="tab" href="#timestamp-converter" role="tab" aria-controls="UNIX timestamp to human-readable date" aria-selected="true">UNIX timestamp to human-readable date</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="date-converter-tab" data-toggle="tab" href="#date-converter" role="tab" aria-controls="Human-readable date to UNIX timestamp" aria-selected="false">Human-readable date to UNIX timestamp</a>
-        </li>
-      </ul>
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="timestamp-converter-tab" data-bs-toggle="tab" data-bs-target="#timestamp-converter" type="button" role="tab" aria-controls="timestamp-converter-tab" aria-selected="true">UNIX timestamp to human-readable date</button>
+          <button class="nav-link" id="date-converter-tab" data-bs-toggle="tab" data-bs-target="#date-converter" type="button" role="tab" aria-controls="date-converter-tab" aria-selected="false">Human-readable date to UNIX timestamp</button>
+        </div>
+      </nav>
       <div class="tab-content">
         <div class="tab-pane fade show active" id="timestamp-converter" role="tabpanel" aria-labelledby="timestamp-converter-tab">
           <div class="mb-3">

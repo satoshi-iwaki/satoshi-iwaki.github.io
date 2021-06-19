@@ -41,10 +41,10 @@
       .tab-pane {
         height: 100%;
       }
-      .row {
+      .row-container {
         height: 100%;
       }
-      .col-md-12 {
+      .col-container {
         height: 100%;
         overflow: scroll;
       }
@@ -61,7 +61,7 @@
       }
       body {
         padding-top: 4.5rem;
-        padding-bottom: 4.0rem;
+        padding-bottom: 7.0rem;
         height: 100%;
       }
 
@@ -80,7 +80,6 @@
               </li>
             </ul>
           </div>
-          <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" onclick="exportHtml()">Export to html</a>
         </div>
       </nav>
       <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
@@ -97,14 +96,25 @@
           </div>
         </div>
       </nav>
-      <div class="row">
-        <div class="col-md-12 order-md-1">
+      <div class="row toolbar">
+        <div class="col-md-10 order-md-1">
           <div class="input-group mb-3">
             <input class="form-control" type="text" id="input-url" placeholder="URL for markdown file" aria-label="URL for markdown file">
             <div class="input-group-append">
               <a class="btn btn-outline-secondary" id="openMarkdown" role="button" href="#" onclick="openMarkdown()">Open</a>
             </div>
           </div>
+        </div>
+        <div class="col-md-2 order-md-1">
+          <div class="btn-toolbar mb-1 justify-content-end" role="toolbar">
+            <div class="btn-group me-2" role="group">
+              <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" onclick="exportHtml()">Export to html</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row row-container">
+        <div class="col-md-12 order-md-1 col-container">
           <div class="preview-container markdown container" id="preview-container"></div>
         </div>
       </div>

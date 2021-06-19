@@ -48,18 +48,10 @@
       .tab-pane {
         height: 100%;
       }
-      .row {
+      .row-container {
         height: 100%;
       }
-      .col-md-5 {
-        height: 100%;
-        overflow: scroll;
-      }
-      .col-md-6 {
-        height: 100%;
-        overflow: scroll;
-      }
-      .col-md-7 {
+      .col-container {
         height: 100%;
         overflow: scroll;
       }
@@ -68,7 +60,7 @@
       }
       body {
         padding-top: 4.5rem;
-        padding-bottom: 6.0rem;
+        padding-bottom: 9.0rem;
         height: 100%;
       }
     </style>
@@ -86,7 +78,6 @@
               </li>
             </ul>
           </div>
-          <a class="btn btn-primary" id="export-diagram" role="button" href="#" download="diagram.svg" role="button"onclick="exportDiagram()">Export to SVG</a>
         </div>
       </nav>
       <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
@@ -103,35 +94,42 @@
           </div>
         </div>
       </nav>
-      <ul class="nav nav-tabs" id="tab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="source-editor-tab" data-toggle="tab" href="#source-editor-tab-pane" role="tab" aria-controls="Source" aria-selected="true">Source</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="configuration-editor-tab" data-toggle="tab" href="#configuration-editor-tab-pane" role="tab" aria-controls="Configuration" aria-selected="false">Configuration</a>
-        </li>
-      </ul>
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="source-editor-tab" data-bs-toggle="tab" data-bs-target="#source-editor-tab-pane" type="button" role="tab" aria-controls="source-editor-tab-pane" aria-selected="true">Source</button>
+          <button class="nav-link" id="configuration-editor-tab" data-bs-toggle="tab" data-bs-target="#configuration-editor-tab-pane" type="button" role="tab" aria-controls="configuration-editor-tab-pane" aria-selected="false">Configuration</button>
+        </div>
+      </nav>
       <div class="tab-content" id="tab-content">
         <div class="tab-pane fade show active" id="source-editor-tab-pane" role="tabpanel" aria-labelledby="source-editor-tab">
-          <div class="row">
-            <div class="col-md-5 order-md-1">
+          <div class="row toolbar">
+            <div class="col-md-12 order-md-1">
+              <div class="btn-toolbar mb-1 justify-content-end" role="toolbar">
+                <div class="btn-group me-2" role="group">
+                  <a class="btn btn-primary" id="export-diagram" role="button" href="#" download="diagram.svg" role="button"onclick="exportDiagram()">Export to SVG</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row row-container">
+            <div class="col-md-5 order-md-1 col-container">
               <div class="editor-container">
                 <textarea class="editor-textarea" id="source-textarea" rows="3" readonly></textarea>
               </div>
             </div>
-            <div class="col-md-7 order-md-2">
+            <div class="col-md-7 order-md-2 col-container">
               <div class="diagram-container" id="diagram"></div>
             </div>
           </div>
         </div>
         <div class="tab-pane fade" id="configuration-editor-tab-pane" role="tabpanel" aria-labelledby="configuration-editor-tab">
-          <div class="row">
-            <div class="col-md-5 order-md-1">
+          <div class="row row-container">
+            <div class="col-md-5 order-md-1 col-container">
               <div class="editor-container">
                 <textarea class="editor-textarea" id="configuration-textarea" rows="3" readonly></textarea>
               </div>
             </div>
-            <div class="col-md-7 order-md-2">
+            <div class="col-md-7 order-md-2 col-container">
             </div>
           </div>
         </div>

@@ -34,7 +34,6 @@
               </li>
             </ul>
           </div>
-          <a class="btn btn-primary" id="export-qrcode" role="button" href="#" download="qrcode.svg" role="button" onclick="exportQrcode()">Export to SVG</a>
         </div>
       </nav>
       <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
@@ -51,11 +50,11 @@
           </div>
         </div>
       </nav>
-      <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="generator-tab" data-toggle="tab" href="#generator" role="tab" aria-controls="QR code generator" aria-selected="true">QR code generator</a>
-        </li>
-      </ul>
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="generator-tab" data-bs-toggle="tab" data-bs-target="#generator" type="button" role="tab" aria-controls="generator" aria-selected="true">QR code generator</button>
+        </div>
+      </nav>
       <div class="tab-content">
         <div class="tab-pane fade show active" id="generator" role="tabpanel" aria-labelledby="generator-tab">
           <div class="mb-3">
@@ -70,6 +69,9 @@
             <div class="qrcode-container" id="qrcode">
               <svg></svg>
             </div>
+          </div>
+          <div class="mb-3">
+            <button type="button" class="btn btn-primary" onclick="exportQrcode()">Export to SVG</button>
           </div>
         </div>
       </div>

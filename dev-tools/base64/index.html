@@ -49,14 +49,12 @@
           </div>
         </div>
       </nav>
-      <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="base64-encoder-tab" data-toggle="tab" href="#base64-encoder" role="tab" aria-controls="base64 encoder" aria-selected="true">Base64 encoder</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="base64-decoder-tab" data-toggle="tab" href="#base64-decoder" role="tab" aria-controls="base64 decoder" aria-selected="false">Base64 decoder</a>
-        </li>
-      </ul>
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="base64-encoder-tab" data-bs-toggle="tab" data-bs-target="#base64-encoder" type="button" role="tab" aria-controls="base64-encoder" aria-selected="true">Base64 encoder</button>
+          <button class="nav-link" id="base64-decoder-tab" data-bs-toggle="tab" data-bs-target="#base64-decoder" type="button" role="tab" aria-controls="base64-decoder" aria-selected="false">Base64 decoder</button>
+        </div>
+      </nav>
       <div class="tab-content">
         <div class="tab-pane fade show active" id="base64-encoder" role="tabpanel" aria-labelledby="base64-encoder-tab">
           <div class="mb-3">
