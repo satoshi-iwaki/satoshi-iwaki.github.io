@@ -13,8 +13,8 @@
     <meta name="description" content="markdwon">
     <title>Markdown editor</title>
     <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <!-- CodeMirror and mermaid -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.54.0/codemirror.css">
     <link rel="stylesheet" href="../common/css/light.css">
@@ -75,10 +75,10 @@
       .tab-pane {
         height: 100%;
       }
-      .row {
+      .row-container {
         height: 100%;
       }
-      .col-md-6 {
+      .col-container {
         height: 100%;
         overflow: scroll;
       }
@@ -95,7 +95,7 @@
       }
       body {
         padding-top: 4.5rem;
-        padding-bottom: 4.0rem;
+        padding-bottom: 6.0rem;
         height: 100%;
       }
       @font-face {
@@ -107,90 +107,97 @@
   <body class="bg-light">
     <div class="container-fluid">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="../index.html">Development tools</a>
-        <div class="collapse navbar-collapse">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Markdown editor</a>
-              <div class="dropdown-menu" aria-labelledby="dropdown" id="menu">
-              </div>
-            </li>
-          </ul>
+        <div class="container-fluid">
+          <a class="navbar-brand" href="../index.html">Development tools</a>
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown" drole="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Markdown editor</a>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdown" id="menu"></ul>
+              </li>
+            </ul>
+          </div>
+          <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" onclick="exportHtml()">Export to html</a>
         </div>
-        <div class="collapse navbar-collapse">
+      </nav>
+      <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="https://iwaki.info/dev-tools">&copy; 2019-2021 iwaki.info</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/privacy.html">Privacy</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="row toolbar">
+        <div class="col-md-12 order-md-1">
+          <div class="mb-1 d-flex justify-content-center">
           <div class="btn-group mr-2">
-            <button class="btn btn-outline-light btn-sm" aria-label="Bold" type="button" onclick="bold()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="Bold" type="button" onclick="bold()">
               <i class="fas fa-bold"></i>
             </button>
-            <button class="btn btn-outline-light btn-sm" aria-label="Italic" type="button" onclick="italic()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="Italic" type="button" onclick="italic()">
               <i class="fas fa-italic"></i>
             </button>
-            <button class="btn btn-outline-light btn-sm" aria-label="Strikethrough" type="button" onclick="strikethrough()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="Strikethrough" type="button" onclick="strikethrough()">
               <i class="fas fa-strikethrough"></i>
             </button>
-            <button class="btn btn-outline-light btn-sm" aria-label="Quote" type="button" onclick="quote()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="Quote" type="button" onclick="quote()">
               <i class="fas fa-quote-right"></i>
             </button>
-            <button class="btn btn-outline-light btn-sm" aria-label="Code" type="button" onclick="code()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="Code" type="button" onclick="code()">
               <i class="fas fa-code"></i>
             </button>
-            <button class="btn btn-outline-light btn-sm" aria-label="link" type="button" onclick="link()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="link" type="button" onclick="link()">
               <i class="fas fa-link"></i>
             </button>
           </div>
           <div class="btn-group mr-2">
-            <button class="btn btn-outline-light btn-sm" aria-label="List bulleted" type="button" onclick="bulletedList()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="List bulleted" type="button" onclick="bulletedList()">
               <i class="fas fa-list"></i>
             </button>
-            <button class="btn btn-outline-light btn-sm" aria-label="List numbered" type="button" onclick="numberedList()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="List numbered" type="button" onclick="numberedList()">
               <i class="fas fa-list-ol"></i>
             </button>
-            <button class="btn btn-outline-light btn-sm" aria-label="List tasks" type="button" onclick="taskList()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="List tasks" type="button" onclick="taskList()">
               <i class="fas fa-tasks"></i>
             </button>
           </div>
           <div class="btn-group mr-2">
-            <button class="btn btn-outline-light btn-sm" aria-label="Table" type="button" onclick="table()">
+            <button class="btn btn-outline-dark btn-sm" aria-label="Table" type="button" onclick="table()">
               <i class="fas fa-table"></i>
             </button>
-            <button class="btn btn-outline-light btn-sm" aria-label="Emoji" type="button" id="emoji-button" data-toggle="popover" data-placement="bottom">
+            <button class="btn btn-outline-dark btn-sm" aria-label="Emoji" type="button" id="emoji-button" data-toggle="popover" data-placement="bottom">
               <i class="fas fa-smile"></i>
             </button>
           </div>
           <div class="btn-group mr-2">
-            <button class="btn btn-outline-light btn-sm" aria-label="Sample" type="button" id="sample-button" data-toggle="popover" data-placement="bottom">
+            <button class="btn btn-outline-dark btn-sm" aria-label="Sample" type="button" id="sample-button" data-toggle="popover" data-placement="bottom">
               <i class="fas fa-question-circle"></i>
             </button>
           </div>
         </div>
-        <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="markdown.html" onclick="exportHtml()">Export to html</a>
-      </nav>
-      <div class="row">
-        <div class="col-md-6 order-md-1">
+        </div>
+      </div>
+      <div class="row row-container">
+        <div class="col-md-6 order-md-1 col-container">
           <div class="editor-container" id="editor-container"></div>
         </div>
-        <div class="col-md-6 order-md-2">
+        <div class="col-md-6 order-md-2 col-container">
           <div class="preview-container markdown container" id="preview-container"></div>
         </div>
       </div>
-      <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
-        <div class="collapse navbar-collapse">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="https://iwaki.info/dev-tools">&copy; 2019 iwaki.info <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/privacy.html">Privacy</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
     </div>
     <div class="emoji-picker" id="emoji-picker" hidden>
       <div class="emoji-grid" id="emoji-grid">
         <!-- 
         <div class="emoji-grid-cell">
-          <img width="20" height="20" src="./assets/emoji/png/1f604.png" alt="icon" onclick="insertEmoji('smile')" async></img>
+          <img width="20" height="20" src="../common/assets/emoji/png/1f604.png" alt="icon" onclick="insertEmoji('smile')" async></img>
         </div>
          -->
       </div>
@@ -209,8 +216,8 @@
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.7.0/marked.min.js"></script>
     <script src="../common/menu.js"></script>
     <script src="../common/lib/highlight.js/highlight.pack.js"></script>
