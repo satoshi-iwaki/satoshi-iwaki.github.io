@@ -145,7 +145,10 @@
       }
     </script>
     <script>
-      var sampleJavascript = `console.log("hello javascript");`;
+      var sampleJavascript = `var items = ["hello", "javascript"];
+var message = items.join(" ");
+console.log(message);
+`;
       var inputJavascript = sampleJavascript
 
       // initialize source editor
@@ -181,7 +184,7 @@
         try {
             new Function(inputJavascript)();
         } catch (event) {
-          output.setValue('Error: ' + event.message)
+          output.setValue('Error: ' + event.message+ '\n')
         }
       }
 
