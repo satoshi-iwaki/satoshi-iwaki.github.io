@@ -13,42 +13,9 @@
     <meta name="description" content="Base64, encoder, decoder">
     <title>Calendar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <style>
-      body {
-        padding-top: 4.5rem;
-        padding-bottom: 4.0rem;
-      }
-    </style>
   </head>
   <body class="bg-light">
     <div class="container-fluid">
-      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="../index.html">Development tools</a>
-          <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown" drole="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Calendar</a>
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdown" id="menu"></ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
-        <div class="container-fluid">
-          <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="https://iwaki.info/dev-tools">&copy; 2019-2021 iwaki.info</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/privacy.html">Privacy</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
       <div class="row">
         <div class="calendar-header-container">
           <button id="previous" onclick="previous()">‹</button>
@@ -100,18 +67,6 @@
           <div class="calendar-container", id="calendar-container-12"></div>
         </div>
       </div>
-      <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-bottom">
-        <div class="collapse navbar-collapse">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="https://iwaki.info/dev-tools">&copy; 2019 iwaki.info <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/privacy.html">Privacy</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
     </div>
     <style>
       .calendar-container {
