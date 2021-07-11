@@ -72,7 +72,9 @@
   <body class="bg-light">
     <div class="container-fluid">
       <div class="row toolbar">
-        <div class="col-md-12 order-md-1">
+        <div class="col-md-6 order-md-1">
+        </div>
+        <div class="col-md-6 order-md-2">
           <div class="btn-toolbar mb-1 justify-content-end" role="toolbar">
             <div class="btn-group me-2" role="group">
               <a class="btn btn-primary" id="exportHtml" role="button" href="#" download="slideshow.html" onclick="exportHtml()">Export to html</a>
@@ -84,7 +86,7 @@
         <div class="col-md-6 order-md-1 col-container">
           <div class="editor-container" id="editor-container"></div>
         </div>
-        <div class="col-md-6 order-md-2 col-container">
+        <div class="col order-md-2 col-container">
           <div class="preview-container markdown container" id="preview-container">
             <iframe class="w-100 h-100" id="preview" sandbox="allow-same-origin allow-scripts" srcdoc=""></iframe>
           </div>
@@ -202,7 +204,7 @@ h1, h2, h3 {
 </style>
 </head>
 <body>
-<textarea id="source">
+<textarea id="source" hidden>
 ${source}
 </textarea>
 ${scripts}
