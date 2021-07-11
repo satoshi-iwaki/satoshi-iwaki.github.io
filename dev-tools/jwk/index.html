@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144024189-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-144024189-1');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="crypto, rsa, jwk">
+    <title>JWK converter / generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  </head>
+  <body class="bg-light">
+    <div class="container-fluid">
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="key-generator-tab" data-bs-toggle="tab" data-bs-target="#key-generator" type="button" role="tab" aria-controls="key-generator" aria-selected="true">PEM and JWK generator</button>
+          <button class="nav-link" id="pem-to-jwk-to-pem-converter-tab" data-bs-toggle="tab" data-bs-target="#pem-converter" type="button" role="tab" aria-controls="pem-converter" aria-selected="true">PEM to JWK converter</button>
+          <button class="nav-link" id="jwk-to-pem-converter-tab" data-bs-toggle="tab" data-bs-target="#jwk-converter" type="button" role="tab" aria-controls="jwk-converter" aria-selected="true">JWK to PEM converter</button>
+        </div>
+      </nav>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="key-generator" role="tabpanel" aria-labelledby="key-generator-tab">
+          <div class="mb-3">
+            <button type="button" class="btn btn-primary" onclick="generateKey()">Generate</button>
+          </div>
+          <div class="mb-3">
+            <label for="key-generator-output-private-key">JWK Private key:</label>
+            <textarea class="form-control" id="key-generator-output-private-key" rows="5" readonly></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="key-generator-output">JWK Public key:</label>
+            <textarea class="form-control" id="key-generator-output-public-key" rows="5" readonly></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="key-generator-output-private-key">PEM Private key:</label>
+            <textarea class="form-control" id="key-generator-output-pem-private-key" rows="5" readonly></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="key-generator-output">PEM Public key:</label>
+            <textarea class="form-control" id="key-generator-output-pem-public-key" rows="5" readonly></textarea>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="pem-converter" role="tabpanel" aria-labelledby="pem-to-jwk-to-pem-converter-tab">
+          <div class="mb-3">
+            <label for="pem-to-jwk-to-pem-converter-input-private-key">PEM private key:</label>
+            <textarea class="form-control" id="pem-to-jwk-to-pem-converter-input-private-key" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="pem-to-jwk-to-pem-converter-input-public-key">PEM public key:</label>
+            <textarea class="form-control" id="pem-to-jwk-to-pem-converter-input-public-key" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <button type="button" class="btn btn-primary" onclick="convertePemToJwk()">Convert</button>
+          </div>
+          <div class="mb-3">
+            <label for="pem-to-jwk-to-pem-converter-output-private-key">Private key:</label>
+            <textarea class="form-control" id="pem-to-jwk-to-pem-converter-output-private-key" rows="5" readonly></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="pem-to-jwk-to-pem-converter-output">Public key:</label>
+            <textarea class="form-control" id="pem-to-jwk-to-pem-converter-output-public-key" rows="5" readonly></textarea>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="jwk-converter" role="tabpanel" aria-labelledby="jwk-to-pem-converter-tab">
+          <div class="mb-3">
+            <label for="jwk-to-pem-converter-input-private-key">PEM private key:</label>
+            <textarea class="form-control" id="jwk-to-pem-converter-input-private-key" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="jwk-to-pem-converter-input-public-key">PEM public key:</label>
+            <textarea class="form-control" id="jwk-to-pem-converter-input-public-key" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <button type="button" class="btn btn-primary" onclick="converteJwkToPem()">Convert</button>
+          </div>
+          <div class="mb-3">
+            <label for="jwk-to-pem-converter-output-private-key">Private key:</label>
+            <textarea class="form-control" id="jwk-to-pem-converter-output-private-key" rows="5" readonly></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="jwk-to-pem-converter-output">Public key:</label>
+            <textarea class="form-control" id="jwk-to-pem-converter-output-public-key" rows="5" readonly></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function convertBase64StringToArrayBuffer(base64) {
+        let binary = atob(base64);
+        let bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+
+      function convertArrayBufferToBase64String(buffer) {
+        let base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+        return base64;
+      }
+
+      function convertPemToBinary(pem) {
+        let lines = pem.split('\n');
+        let encoded = '';
+        for (var i = 0; i < lines.length; i++) {
+            if (lines[i].trim().length > 0 &&
+                lines[i].indexOf('-----BEGIN RSA PRIVATE KEY-----') < 0 &&
+                lines[i].indexOf('-----BEGIN RSA PUBLIC KEY-----') < 0 &&
+                lines[i].indexOf('-----BEGIN PUBLIC KEY-----') < 0 &&
+                lines[i].indexOf('-----END PUBLIC KEY-----') < 0 &&
+                lines[i].indexOf('-----BEGIN PRIVATE KEY-----') < 0 &&
+                lines[i].indexOf('-----END PRIVATE KEY-----') < 0 &&
+                lines[i].indexOf('-----END RSA PRIVATE KEY-----') < 0 &&
+                lines[i].indexOf('-----END RSA PUBLIC KEY-----') < 0) {
+                encoded += lines[i].trim();
+            }
+        }
+        return convertBase64StringToArrayBuffer(encoded);
+      }
+
+      function convertBinaryToPem(header, footer, arrayBuffer) {
+        let base64 = convertArrayBufferToBase64String(arrayBuffer)
+        let lines = []
+        lines.push(header);
+        while (base64.length > 0) {
+          lines.push(base64.substring(0, 64));
+          base64 = base64.substring(64);
+        }
+        lines.push(footer);
+        return lines.join('\n');
+      }
+
+      function convertePemToJwk() {
+        let pemPublicKey = document.getElementById('pem-to-jwk-to-pem-converter-input-public-key').value
+        let publicKeyData = convertPemToBinary(pemPublicKey);
+        window.crypto.subtle.importKey(
+          'spki',
+          publicKeyData,
+          {
+            name: 'RSASSA-PKCS1-v1_5',
+            hash: {name: 'SHA-256'}
+          },
+          true,
+          ['verify']
+        ).then(function(publicKey) {
+          if (publicKey) {
+            window.crypto.subtle.exportKey(
+              'jwk',
+              publicKey
+            ).then(function(keydata) {
+              document.getElementById('pem-to-jwk-to-pem-converter-output-public-key').value = JSON.stringify(keydata, null, 2);
+            }).catch(function(err) {
+              alert(`Error: ${err}`);
+            });
+          }
+        }).catch(function(err) {
+          alert(`Error: ${err}`);
+        });
+
+        let pemPrivateKey = document.getElementById('pem-to-jwk-to-pem-converter-input-private-key').value
+        let privateKeyData = convertPemToBinary(pemPrivateKey);
+        window.crypto.subtle.importKey(
+          'pkcs8',
+          privateKeyData,
+          {
+            name: 'RSASSA-PKCS1-v1_5',
+            hash: {name: 'SHA-256'}
+          },
+          true,
+          ['sign']
+        ).then(function(privateKey) {
+          if (privateKey) {
+            window.crypto.subtle.exportKey(
+              'jwk',
+              privateKey
+            ).then(function(keydata) {
+              document.getElementById('pem-to-jwk-to-pem-converter-output-private-key').value = JSON.stringify(keydata, null, 2);
+            }).catch(function(err) {
+              alert(`Error: ${err}`);
+            });
+          }
+        }).catch(function(err) {
+          alert(`Error: ${err}`);
+        });
+      }
+
+      function converteJwkToPem() {
+        let jwkPublicKey = document.getElementById('jwk-to-pem-converter-input-public-key').value;
+        if (jwkPublicKey && jwkPublicKey.length > 0) {
+          let publicKeyData = JSON.parse(jwkPublicKey);
+          window.crypto.subtle.importKey(
+            'jwk',
+            publicKeyData,
+            {
+              name: 'RSASSA-PKCS1-v1_5',
+              hash: {name: 'SHA-256'}
+            },
+            true,
+            ['verify']
+          ).then(function(publicKey) {
+            if (publicKey) {
+              window.crypto.subtle.exportKey(
+                'spki',
+                publicKey
+              ).then(function(keydata) {
+                let pem = convertBinaryToPem('-----BEGIN PUBLIC KEY-----', '-----END PUBLIC KEY-----', keydata)
+                document.getElementById('jwk-to-pem-converter-output-public-key').value = pem;
+              }).catch(function(err) {
+                alert(`Error: ${err}`);
+              });
+            }
+          }).catch(function(err) {
+            alert(`Error: ${err}`);
+          });
+        }
+
+        let jwkPrivateKey = document.getElementById('jwk-to-pem-converter-input-private-key').value
+        if (jwkPrivateKey && jwkPrivateKey.length > 0) {
+          let privateKeyData = JSON.parse(jwkPrivateKey);
+          window.crypto.subtle.importKey(
+            'jwk',
+            privateKeyData,
+            {
+              name: 'RSASSA-PKCS1-v1_5',
+              hash: {name: 'SHA-256'}
+            }, true,
+            ['sign']
+          ).then(function(privateKey) {
+            if (privateKey) {
+              window.crypto.subtle.exportKey(
+                'pkcs8',
+                privateKey
+              ).then(function(keydata) {
+                let pem = convertBinaryToPem('-----BEGIN RSA PRIVATE KEY-----', '-----END RSA PRIVATE KEY-----', keydata)
+                document.getElementById('jwk-to-pem-converter-output-private-key').value = pem;
+              }).catch(function(err) {
+                alert(`Error: ${err}`);
+              });
+            }
+          }).catch(function(err) {
+            alert(`Error: ${err}`);
+          });
+        }
+      }
+      
+      function updatePrivateKey(format, privateKey) {
+        window.crypto.subtle.exportKey(
+          format,
+          privateKey
+        ).then(function(keydata) {
+          document.getElementById('key-generator-output-private-key').value = JSON.stringify(keydata, null, 2);
+        }).catch(function(err) {
+          alert(`Error: ${err}`);
+        });
+      }
+      function updatePublicKey(format, publicKey) {
+        window.crypto.subtle.exportKey(
+          format,
+          publicKey
+        ).then(function(keydata) {
+          document.getElementById('key-generator-output-public-key').value = JSON.stringify(keydata, null, 2);
+        }).catch(function(err) {
+          alert(`Error: ${err}`);
+        });
+      }
+      function generateKey() {
+        let format = 'jwk';
+        let algorithm = 'RSASSA-PKCS1-v1_5'
+        window.crypto.subtle.generateKey(
+          {
+              name: algorithm,
+              modulusLength: 2048,
+              publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+              hash: {name: 'SHA-256'},
+          },
+          true,
+          ['sign', 'verify']
+        ).then(function(key) {
+          // JWK
+          window.crypto.subtle.exportKey(
+            'jwk',
+            key.publicKey
+          ).then(function(keydata) {
+            document.getElementById('key-generator-output-public-key').value = JSON.stringify(keydata, null, 2);
+          }).catch(function(err) {
+            alert(`Error: ${err}`);
+          });
+          window.crypto.subtle.exportKey(
+            'jwk',
+            key.privateKey
+          ).then(function(keydata) {
+            document.getElementById('key-generator-output-private-key').value = JSON.stringify(keydata, null, 2);
+          }).catch(function(err) {
+            alert(`Error: ${err}`);
+          });
+          // PEM
+          window.crypto.subtle.exportKey(
+            'spki',
+            key.publicKey
+          ).then(function(keydata) {
+            let pem = convertBinaryToPem('-----BEGIN PUBLIC KEY-----', '-----END PUBLIC KEY-----', keydata)
+            document.getElementById('key-generator-output-pem-public-key').value = pem;
+          }).catch(function(err) {
+            alert(`Error: ${err}`);
+          });
+          window.crypto.subtle.exportKey(
+            'pkcs8',
+            key.privateKey
+          ).then(function(keydata) {
+            let pem = convertBinaryToPem('-----BEGIN RSA PRIVATE KEY-----', '-----END RSA PRIVATE KEY-----', keydata)
+              document.getElementById('key-generator-output-pem-private-key').value = pem;
+          }).catch(function(err) {
+            alert(`Error: ${err}`);
+          });
+        }).catch(function(err) {
+          alert(`Error: ${err}`);
+        });
+      };
+      window.onload = function() {
+        document.getElementById('pem-to-jwk-to-pem-converter-input-private-key').value = `-----BEGIN RSA PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDE0rNMHVWREuyG
+jHTcdYbLuduqp+kUN+hyhPvkMPM0uHQcnxnsWCJIOuPZTsOGv6iY6YdZ43n1YKTo
+Tq/0KWoSxDrV4hG2+lGlH+P2rek+1Pe4VnZsH5ATxmGYCQ2HdlKn/e2z8xX1dT5W
+2nDDQYc8FjnrW8i8PbqtLSrfW6aGUy3/rnpegsilzozvuAZhvDmfN3QjgyHgibfE
+IM+MrcNuSFKatQCw7qN3+0l6IhVIPeYyUn34QthQhNWGioi9dXO0OhrM/2NmsMwz
+sgSSZKKAvxQ5/Hwu8TecqLrVYw/xcvhsUWQlFcFKuHJGLaIQzT9wrKwoFfMxr1ru
+G17ONz89AgMBAAECggEAFEG/NFE8kj7JWxuvl1T9N5B8XDcF1Q/f+5FWP2kOTtnB
+EYUKbPmxJY/yDVZ+5ypolrxKMuUnkyqMLmCS2WU9xoqtp3+p5RQkPQNoOeYyQEY4
+7J7xdzVUZcSgHL6pxsxVu3Z19XRKSUX00YmP23iuC3AaK+/5W+5afSJN7EkJfX95
+3IQIYCV5KfkTi/pLhs0i2StO7/zy7XvfDPxN9OGXm7tkYFW4szyVbo6hHi6oa4ZG
+oaDVNBXLY5gw3TCQqLbPxwPCxOvn3pgcgc20viR7qnI5rhUOU9pKNipRK0wphjjS
+KOci9NLZ31H8otWhuYA5sRnIrLFosmej2UX8fR8V/QKBgQDoAyILkaUL0JG82r7o
+ghgdqo7k1kcMg5Sr8lNK5WED54u/Z+og3efhGDO9FBiXwrDMlLp6/dMZqZlFH0xc
+/RhcrIaPksQpWqhdziQRPUOfrwwx7EG8zvh0CXT88BYCWFOeo15/fiVDniW/3E0P
+IUixregb67+Y9mXM4CoXlhIAVwKBgQDZLC9V7v4Zw/WXYGTPpYvU+FWDJSjYDQic
+M7+qyk+ADgryK3aw4HOMUn5FgfEZ2PKfBxah+Inz9nMoDZ34/wu8XU4jjJDlnkVE
+iWABYZt1QNUTZ4xaJ6mW4sWMaxOPPAvKNx499aAdpNX0AUQHwMxbAP6Q0ynbBEd1
+MqZ61S1wiwKBgB0MD14dbOluwmA/jrkzWGuWZ+90eE6zxpBEdXMiBqRjf9aF3wUg
+YyCGVCvu8SlG4bWrRTGSx7QlzJ+fzIKz2TH5E5u0B0UaKYwc+90Aq4+5bbBuYMiP
+rQFyEah9MnQ2tLlewLz7gRTXHujHXwpu41gDatTcDg/LgXFF+18alcRfAoGAOU0b
+QEVK7mlyB3r7nn5DovHTPkMzv63Qs8ZDsECpMVSDNtqY+pp+YmvxvU1H3FYNzkAE
+jMATRjekstDE+cnxwsWrtF2Gbc+Q30CQAE1Mw2dT0UblFXSZnqI/FYm7I3PoeHaK
+mDaTBL9VZIhg9tq8ENb2VCgjRxKd+CJhIs/UqXkCgYAxwA5ES7taKW+m6JRv3qcl
+rmDNIBSfkhRolOyFcthhJXyn4gKPR0ZZryZu3A/hsWt3o6k2n1nFJX6M7rbZHHt5
+ls5FUN8bdEM3mCGVh3GjhEBOal4hUEmpQbat5/eoJud1ARbTgLb4rhYU8H8QI3oW
+NQiSW/qgxw2cQosLs+40ug==
+-----END RSA PRIVATE KEY-----`
+
+        document.getElementById('pem-to-jwk-to-pem-converter-input-public-key').value = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxNKzTB1VkRLshox03HWG
+y7nbqqfpFDfocoT75DDzNLh0HJ8Z7FgiSDrj2U7Dhr+omOmHWeN59WCk6E6v9Clq
+EsQ61eIRtvpRpR/j9q3pPtT3uFZ2bB+QE8ZhmAkNh3ZSp/3ts/MV9XU+Vtpww0GH
+PBY561vIvD26rS0q31umhlMt/656XoLIpc6M77gGYbw5nzd0I4Mh4Im3xCDPjK3D
+bkhSmrUAsO6jd/tJeiIVSD3mMlJ9+ELYUITVhoqIvXVztDoazP9jZrDMM7IEkmSi
+gL8UOfx8LvE3nKi61WMP8XL4bFFkJRXBSrhyRi2iEM0/cKysKBXzMa9a7htezjc/
+PQIDAQAB
+-----END PUBLIC KEY-----`
+
+        document.getElementById('jwk-to-pem-converter-input-private-key').value = `{
+  "alg": "RS256",
+  "d": "FEG_NFE8kj7JWxuvl1T9N5B8XDcF1Q_f-5FWP2kOTtnBEYUKbPmxJY_yDVZ-5ypolrxKMuUnkyqMLmCS2WU9xoqtp3-p5RQkPQNoOeYyQEY47J7xdzVUZcSgHL6pxsxVu3Z19XRKSUX00YmP23iuC3AaK-_5W-5afSJN7EkJfX953IQIYCV5KfkTi_pLhs0i2StO7_zy7XvfDPxN9OGXm7tkYFW4szyVbo6hHi6oa4ZGoaDVNBXLY5gw3TCQqLbPxwPCxOvn3pgcgc20viR7qnI5rhUOU9pKNipRK0wphjjSKOci9NLZ31H8otWhuYA5sRnIrLFosmej2UX8fR8V_Q",
+  "dp": "HQwPXh1s6W7CYD-OuTNYa5Zn73R4TrPGkER1cyIGpGN_1oXfBSBjIIZUK-7xKUbhtatFMZLHtCXMn5_MgrPZMfkTm7QHRRopjBz73QCrj7ltsG5gyI-tAXIRqH0ydDa0uV7AvPuBFNce6MdfCm7jWANq1NwOD8uBcUX7XxqVxF8",
+  "dq": "OU0bQEVK7mlyB3r7nn5DovHTPkMzv63Qs8ZDsECpMVSDNtqY-pp-YmvxvU1H3FYNzkAEjMATRjekstDE-cnxwsWrtF2Gbc-Q30CQAE1Mw2dT0UblFXSZnqI_FYm7I3PoeHaKmDaTBL9VZIhg9tq8ENb2VCgjRxKd-CJhIs_UqXk",
+  "e": "AQAB",
+  "ext": true,
+  "key_ops": [
+    "sign"
+  ],
+  "kty": "RSA",
+  "n": "xNKzTB1VkRLshox03HWGy7nbqqfpFDfocoT75DDzNLh0HJ8Z7FgiSDrj2U7Dhr-omOmHWeN59WCk6E6v9ClqEsQ61eIRtvpRpR_j9q3pPtT3uFZ2bB-QE8ZhmAkNh3ZSp_3ts_MV9XU-Vtpww0GHPBY561vIvD26rS0q31umhlMt_656XoLIpc6M77gGYbw5nzd0I4Mh4Im3xCDPjK3DbkhSmrUAsO6jd_tJeiIVSD3mMlJ9-ELYUITVhoqIvXVztDoazP9jZrDMM7IEkmSigL8UOfx8LvE3nKi61WMP8XL4bFFkJRXBSrhyRi2iEM0_cKysKBXzMa9a7htezjc_PQ",
+  "p": "6AMiC5GlC9CRvNq-6IIYHaqO5NZHDIOUq_JTSuVhA-eLv2fqIN3n4RgzvRQYl8KwzJS6ev3TGamZRR9MXP0YXKyGj5LEKVqoXc4kET1Dn68MMexBvM74dAl0_PAWAlhTnqNef34lQ54lv9xNDyFIsa3oG-u_mPZlzOAqF5YSAFc",
+  "q": "2SwvVe7-GcP1l2Bkz6WL1PhVgyUo2A0InDO_qspPgA4K8it2sOBzjFJ-RYHxGdjynwcWofiJ8_ZzKA2d-P8LvF1OI4yQ5Z5FRIlgAWGbdUDVE2eMWiepluLFjGsTjzwLyjcePfWgHaTV9AFEB8DMWwD-kNMp2wRHdTKmetUtcIs",
+  "qi": "McAOREu7WilvpuiUb96nJa5gzSAUn5IUaJTshXLYYSV8p-ICj0dGWa8mbtwP4bFrd6OpNp9ZxSV-jO622Rx7eZbORVDfG3RDN5ghlYdxo4RATmpeIVBJqUG2ref3qCbndQEW04C2-K4WFPB_ECN6FjUIklv6oMcNnEKLC7PuNLo"
+}`
+
+        document.getElementById('jwk-to-pem-converter-input-public-key').value = `{
+  "alg": "RS256",
+  "e": "AQAB",
+  "ext": true,
+  "key_ops": [
+    "verify"
+  ],
+  "kty": "RSA",
+  "n": "xNKzTB1VkRLshox03HWGy7nbqqfpFDfocoT75DDzNLh0HJ8Z7FgiSDrj2U7Dhr-omOmHWeN59WCk6E6v9ClqEsQ61eIRtvpRpR_j9q3pPtT3uFZ2bB-QE8ZhmAkNh3ZSp_3ts_MV9XU-Vtpww0GHPBY561vIvD26rS0q31umhlMt_656XoLIpc6M77gGYbw5nzd0I4Mh4Im3xCDPjK3DbkhSmrUAsO6jd_tJeiIVSD3mMlJ9-ELYUITVhoqIvXVztDoazP9jZrDMM7IEkmSigL8UOfx8LvE3nKi61WMP8XL4bFFkJRXBSrhyRi2iEM0_cKysKBXzMa9a7htezjc_PQ"
+}`
+      }
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+  </body>
+</html>
