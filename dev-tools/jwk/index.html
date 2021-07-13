@@ -19,12 +19,27 @@
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <button class="nav-link active" id="key-generator-tab" data-bs-toggle="tab" data-bs-target="#key-generator" type="button" role="tab" aria-controls="key-generator" aria-selected="true">PEM and JWK generator</button>
-          <button class="nav-link" id="pem-to-jwk-to-pem-converter-tab" data-bs-toggle="tab" data-bs-target="#pem-converter" type="button" role="tab" aria-controls="pem-converter" aria-selected="true">PEM to JWK converter</button>
+          <button class="nav-link" id="pem-to-jwk-converter-tab" data-bs-toggle="tab" data-bs-target="#pem-converter" type="button" role="tab" aria-controls="pem-converter" aria-selected="true">PEM to JWK converter</button>
           <button class="nav-link" id="jwk-to-pem-converter-tab" data-bs-toggle="tab" data-bs-target="#jwk-converter" type="button" role="tab" aria-controls="jwk-converter" aria-selected="true">JWK to PEM converter</button>
         </div>
       </nav>
       <div class="tab-content">
         <div class="tab-pane fade show active" id="key-generator" role="tabpanel" aria-labelledby="key-generator-tab">
+          <div class="mb-3">
+            <label for="key-generator-input-algorithm">Algorithm:</label>
+            <select class="form-select" aria-label="Algorithm" id="key-generator-input-algorithm">
+              <option selected value="RSASSA-PKCS1-v1_5">RSASSA-PKCS1-v1_5</option>
+              <option value="RSA-PSS">RSA-PSS</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="key-generator-input-hash">Hash:</label>
+            <select class="form-select" aria-label="Hash" id="key-generator-input-hash">
+              <option selected value="SHA-256">SHA-256</option>
+              <option value="SHA-384">SHA-384</option>
+              <option value="SHA-512">SHA-512</option>
+            </select>
+          </div>
           <div class="mb-3">
             <button type="button" class="btn btn-primary" onclick="generateKey()">Generate</button>
           </div>
@@ -45,25 +60,40 @@
             <textarea class="form-control" id="key-generator-output-pem-public-key" rows="5" readonly></textarea>
           </div>
         </div>
-        <div class="tab-pane fade" id="pem-converter" role="tabpanel" aria-labelledby="pem-to-jwk-to-pem-converter-tab">
+        <div class="tab-pane fade" id="pem-converter" role="tabpanel" aria-labelledby="pem-to-jwk-converter-tab">
           <div class="mb-3">
-            <label for="pem-to-jwk-to-pem-converter-input-private-key">PEM private key:</label>
-            <textarea class="form-control" id="pem-to-jwk-to-pem-converter-input-private-key" rows="5"></textarea>
+            <label for="pem-to-jwk-converter-input-private-key">PEM private key:</label>
+            <textarea class="form-control" id="pem-to-jwk-converter-input-private-key" rows="5"></textarea>
           </div>
           <div class="mb-3">
-            <label for="pem-to-jwk-to-pem-converter-input-public-key">PEM public key:</label>
-            <textarea class="form-control" id="pem-to-jwk-to-pem-converter-input-public-key" rows="5"></textarea>
+            <label for="pem-to-jwk-converter-input-public-key">PEM public key:</label>
+            <textarea class="form-control" id="pem-to-jwk-converter-input-public-key" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="pem-to-jwk-converter-input-algorithm">Algorithm:</label>
+            <select class="form-select" aria-label="Algorithm" id="pem-to-jwk-converter-input-algorithm">
+              <option selected value="RSASSA-PKCS1-v1_5">RSASSA-PKCS1-v1_5</option>
+              <option value="RSA-PSS">RSA-PSS</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="pem-to-jwk-converter-input-hash">Hash:</label>
+            <select class="form-select" aria-label="Hash" id="pem-to-jwk-converter-input-hash">
+              <option selected value="SHA-256">SHA-256</option>
+              <option value="SHA-384">SHA-384</option>
+              <option value="SHA-512">SHA-512</option>
+            </select>
           </div>
           <div class="mb-3">
             <button type="button" class="btn btn-primary" onclick="convertePemToJwk()">Convert</button>
           </div>
           <div class="mb-3">
-            <label for="pem-to-jwk-to-pem-converter-output-private-key">Private key:</label>
-            <textarea class="form-control" id="pem-to-jwk-to-pem-converter-output-private-key" rows="5" readonly></textarea>
+            <label for="pem-to-jwk-converter-output-private-key">Private key:</label>
+            <textarea class="form-control" id="pem-to-jwk-converter-output-private-key" rows="5" readonly></textarea>
           </div>
           <div class="mb-3">
-            <label for="pem-to-jwk-to-pem-converter-output">Public key:</label>
-            <textarea class="form-control" id="pem-to-jwk-to-pem-converter-output-public-key" rows="5" readonly></textarea>
+            <label for="pem-to-jwk-converter-output">Public key:</label>
+            <textarea class="form-control" id="pem-to-jwk-converter-output-public-key" rows="5" readonly></textarea>
           </div>
         </div>
         <div class="tab-pane fade" id="jwk-converter" role="tabpanel" aria-labelledby="jwk-to-pem-converter-tab">
@@ -74,6 +104,21 @@
           <div class="mb-3">
             <label for="jwk-to-pem-converter-input-public-key">PEM public key:</label>
             <textarea class="form-control" id="jwk-to-pem-converter-input-public-key" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="jwk-to-pem-converter-input-algorithm">Algorithm:</label>
+            <select class="form-select" aria-label="Algorithm" id="jwk-to-pem-converter-input-algorithm">
+              <option selected value="RSASSA-PKCS1-v1_5">RSASSA-PKCS1-v1_5</option>
+              <option value="RSA-PSS">RSA-PSS</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="jwk-to-pem-converter-input-hash">Hash:</label>
+            <select class="form-select" aria-label="Hash" id="jwk-to-pem-converter-input-hash">
+              <option selected value="SHA-256">SHA-256</option>
+              <option value="SHA-384">SHA-384</option>
+              <option value="SHA-512">SHA-512</option>
+            </select>
           </div>
           <div class="mb-3">
             <button type="button" class="btn btn-primary" onclick="converteJwkToPem()">Convert</button>
@@ -136,14 +181,16 @@
       }
 
       function convertePemToJwk() {
-        let pemPublicKey = document.getElementById('pem-to-jwk-to-pem-converter-input-public-key').value
+        let algorithm = document.getElementById('pem-to-jwk-converter-input-algorithm').value
+        let hash = document.getElementById('pem-to-jwk-converter-input-hash').value
+        let pemPublicKey = document.getElementById('pem-to-jwk-converter-input-public-key').value
         let publicKeyData = convertPemToBinary(pemPublicKey);
         window.crypto.subtle.importKey(
           'spki',
           publicKeyData,
           {
-            name: 'RSASSA-PKCS1-v1_5',
-            hash: {name: 'SHA-256'}
+            name: algorithm,
+            hash: { name: hash }
           },
           true,
           ['verify']
@@ -153,7 +200,7 @@
               'jwk',
               publicKey
             ).then(function(keydata) {
-              document.getElementById('pem-to-jwk-to-pem-converter-output-public-key').value = JSON.stringify(keydata, null, 2);
+              document.getElementById('pem-to-jwk-converter-output-public-key').value = JSON.stringify(keydata, null, 2);
             }).catch(function(err) {
               alert(`Error: ${err}`);
             });
@@ -162,14 +209,14 @@
           alert(`Error: ${err}`);
         });
 
-        let pemPrivateKey = document.getElementById('pem-to-jwk-to-pem-converter-input-private-key').value
+        let pemPrivateKey = document.getElementById('pem-to-jwk-converter-input-private-key').value
         let privateKeyData = convertPemToBinary(pemPrivateKey);
         window.crypto.subtle.importKey(
           'pkcs8',
           privateKeyData,
           {
-            name: 'RSASSA-PKCS1-v1_5',
-            hash: {name: 'SHA-256'}
+            name: algorithm,
+            hash: { name: hash }
           },
           true,
           ['sign']
@@ -179,7 +226,7 @@
               'jwk',
               privateKey
             ).then(function(keydata) {
-              document.getElementById('pem-to-jwk-to-pem-converter-output-private-key').value = JSON.stringify(keydata, null, 2);
+              document.getElementById('pem-to-jwk-converter-output-private-key').value = JSON.stringify(keydata, null, 2);
             }).catch(function(err) {
               alert(`Error: ${err}`);
             });
@@ -190,6 +237,8 @@
       }
 
       function converteJwkToPem() {
+        let algorithm = document.getElementById('jwk-to-pem-converter-input-algorithm').value
+        let hash = document.getElementById('jwk-to-pem-converter-input-hash').value
         let jwkPublicKey = document.getElementById('jwk-to-pem-converter-input-public-key').value;
         if (jwkPublicKey && jwkPublicKey.length > 0) {
           let publicKeyData = JSON.parse(jwkPublicKey);
@@ -197,8 +246,8 @@
             'jwk',
             publicKeyData,
             {
-              name: 'RSASSA-PKCS1-v1_5',
-              hash: {name: 'SHA-256'}
+              name: algorithm,
+              hash: { name: hash }
             },
             true,
             ['verify']
@@ -226,8 +275,8 @@
             'jwk',
             privateKeyData,
             {
-              name: 'RSASSA-PKCS1-v1_5',
-              hash: {name: 'SHA-256'}
+              name: algorithm,
+              hash: { name: hash }
             }, true,
             ['sign']
           ).then(function(privateKey) {
@@ -247,36 +296,17 @@
           });
         }
       }
-      
-      function updatePrivateKey(format, privateKey) {
-        window.crypto.subtle.exportKey(
-          format,
-          privateKey
-        ).then(function(keydata) {
-          document.getElementById('key-generator-output-private-key').value = JSON.stringify(keydata, null, 2);
-        }).catch(function(err) {
-          alert(`Error: ${err}`);
-        });
-      }
-      function updatePublicKey(format, publicKey) {
-        window.crypto.subtle.exportKey(
-          format,
-          publicKey
-        ).then(function(keydata) {
-          document.getElementById('key-generator-output-public-key').value = JSON.stringify(keydata, null, 2);
-        }).catch(function(err) {
-          alert(`Error: ${err}`);
-        });
-      }
+
       function generateKey() {
         let format = 'jwk';
-        let algorithm = 'RSASSA-PKCS1-v1_5'
+        let algorithm = document.getElementById('key-generator-input-algorithm').value
+        let hash = document.getElementById('key-generator-input-hash').value
         window.crypto.subtle.generateKey(
           {
               name: algorithm,
               modulusLength: 2048,
               publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-              hash: {name: 'SHA-256'},
+              hash: { name: hash }
           },
           true,
           ['sign', 'verify']
@@ -322,7 +352,7 @@
         });
       };
       window.onload = function() {
-        document.getElementById('pem-to-jwk-to-pem-converter-input-private-key').value = `-----BEGIN RSA PRIVATE KEY-----
+        document.getElementById('pem-to-jwk-converter-input-private-key').value = `-----BEGIN RSA PRIVATE KEY-----
 MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDE0rNMHVWREuyG
 jHTcdYbLuduqp+kUN+hyhPvkMPM0uHQcnxnsWCJIOuPZTsOGv6iY6YdZ43n1YKTo
 Tq/0KWoSxDrV4hG2+lGlH+P2rek+1Pe4VnZsH5ATxmGYCQ2HdlKn/e2z8xX1dT5W
@@ -351,7 +381,7 @@ ls5FUN8bdEM3mCGVh3GjhEBOal4hUEmpQbat5/eoJud1ARbTgLb4rhYU8H8QI3oW
 NQiSW/qgxw2cQosLs+40ug==
 -----END RSA PRIVATE KEY-----`
 
-        document.getElementById('pem-to-jwk-to-pem-converter-input-public-key').value = `-----BEGIN PUBLIC KEY-----
+        document.getElementById('pem-to-jwk-converter-input-public-key').value = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxNKzTB1VkRLshox03HWG
 y7nbqqfpFDfocoT75DDzNLh0HJ8Z7FgiSDrj2U7Dhr+omOmHWeN59WCk6E6v9Clq
 EsQ61eIRtvpRpR/j9q3pPtT3uFZ2bB+QE8ZhmAkNh3ZSp/3ts/MV9XU+Vtpww0GH
