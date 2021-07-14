@@ -285,7 +285,7 @@
                 'pkcs8',
                 privateKey
               ).then(function(keydata) {
-                let pem = convertBinaryToPem('-----BEGIN RSA PRIVATE KEY-----', '-----END RSA PRIVATE KEY-----', keydata)
+                let pem = convertBinaryToPem('-----BEGIN PRIVATE KEY-----', '-----END PRIVATE KEY-----', keydata)
                 document.getElementById('jwk-to-pem-converter-output-private-key').value = pem;
               }).catch(function(err) {
                 alert(`Error: ${err}`);
@@ -342,8 +342,8 @@
             'pkcs8',
             key.privateKey
           ).then(function(keydata) {
-            let pem = convertBinaryToPem('-----BEGIN RSA PRIVATE KEY-----', '-----END RSA PRIVATE KEY-----', keydata)
-              document.getElementById('key-generator-output-pem-private-key').value = pem;
+            let pem = convertBinaryToPem('-----BEGIN PRIVATE KEY-----', '-----END PRIVATE KEY-----', keydata)
+            document.getElementById('key-generator-output-pem-private-key').value = pem;
           }).catch(function(err) {
             alert(`Error: ${err}`);
           });
@@ -352,7 +352,7 @@
         });
       };
       window.onload = function() {
-        document.getElementById('pem-to-jwk-converter-input-private-key').value = `-----BEGIN RSA PRIVATE KEY-----
+        document.getElementById('pem-to-jwk-converter-input-private-key').value = `-----BEGIN PRIVATE KEY-----
 MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDE0rNMHVWREuyG
 jHTcdYbLuduqp+kUN+hyhPvkMPM0uHQcnxnsWCJIOuPZTsOGv6iY6YdZ43n1YKTo
 Tq/0KWoSxDrV4hG2+lGlH+P2rek+1Pe4VnZsH5ATxmGYCQ2HdlKn/e2z8xX1dT5W
@@ -379,7 +379,7 @@ mDaTBL9VZIhg9tq8ENb2VCgjRxKd+CJhIs/UqXkCgYAxwA5ES7taKW+m6JRv3qcl
 rmDNIBSfkhRolOyFcthhJXyn4gKPR0ZZryZu3A/hsWt3o6k2n1nFJX6M7rbZHHt5
 ls5FUN8bdEM3mCGVh3GjhEBOal4hUEmpQbat5/eoJud1ARbTgLb4rhYU8H8QI3oW
 NQiSW/qgxw2cQosLs+40ug==
------END RSA PRIVATE KEY-----`
+-----END PRIVATE KEY-----`
 
         document.getElementById('pem-to-jwk-converter-input-public-key').value = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxNKzTB1VkRLshox03HWG
