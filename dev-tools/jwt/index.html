@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144024189-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-144024189-1');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="crypto, rsa, jwt">
+    <title>JSON Web Token encoder and decoder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  </head>
+  <body class="bg-light">
+    <div class="container-fluid">
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="jwt-decoder-tab" data-bs-toggle="tab" data-bs-target="#jwt-decoder" type="button" role="tab" aria-controls="jwt-decoder" aria-selected="true">Decode and Verify</button>
+          <button class="nav-link" id="jwt-encoder-tab" data-bs-toggle="tab" data-bs-target="#jwt-encoder" type="button" role="tab" aria-controls="jwt-encoder" aria-selected="true">Encode and Sign</button>
+        </div>
+      </nav>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="jwt-decoder" role="tabpanel" aria-labelledby="jwt-decoder-tab">
+          <div class="mb-3">
+            <label for="jwt-decoder-input-algorithm">Algorithm:</label>
+            <select class="form-select" aria-label="Algorithm" id="jwt-decoder-input-algorithm">
+              <option selected value="RSASSA-PKCS1-v1_5">RSASSA-PKCS1-v1_5</option>
+              <option value="RSA-PSS">RSA-PSS</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-decoder-input-hash">Hash:</label>
+            <select class="form-select" aria-label="Hash" id="jwt-decoder-input-hash">
+              <option selected value="SHA-256">SHA-256</option>
+              <option value="SHA-384">SHA-384</option>
+              <option value="SHA-512">SHA-512</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-decoder-input-public-key">PEM public key:</label>
+            <textarea class="form-control" id="jwt-decoder-input-public-key" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-decoder-input-jwt">JWT:</label>
+            <textarea class="form-control" id="jwt-decoder-input-jwt" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <button type="button" class="btn btn-primary" onclick="decode()">Decode</button>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-decoder-output-jwt-header">JWT header:</label>
+            <textarea class="form-control" id="jwt-decoder-output-jwt-header" rows="5" readonly></textarea>
+            <label for="jwt-decoder-output-jwt-payload">JWT payload:</label>
+            <textarea class="form-control" id="jwt-decoder-output-jwt-payload" rows="5" readonly></textarea>
+            <label for="jwt-decoder-output-jwt-signature">JWT signature:</label>
+            <textarea class="form-control" id="jwt-decoder-output-jwt-signature" rows="5" readonly></textarea>
+            <label for="jwt-decoder-output-jwt-signature">Signature verification result:</label>
+            <textarea class="form-control" id="jwt-decoder-output-jwt-verification" rows="1" readonly></textarea>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="jwt-encoder" role="tabpanel" aria-labelledby="jwt-encoder-tab">
+          <div class="mb-3">
+            <label for="jwt-encoder-input-algorithm">Algorithm:</label>
+            <select class="form-select" aria-label="Algorithm" id="jwt-encoder-input-algorithm">
+              <option selected value="RSASSA-PKCS1-v1_5">RSASSA-PKCS1-v1_5</option>
+              <option value="RSA-PSS">RSA-PSS</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-encoder-input-hash">Hash:</label>
+            <select class="form-select" aria-label="Hash" id="jwt-encoder-input-hash">
+              <option selected value="SHA-256">SHA-256</option>
+              <option value="SHA-384">SHA-384</option>
+              <option value="SHA-512">SHA-512</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-encoder-input-private-key">PEM private key:</label>
+            <textarea class="form-control" id="jwt-encoder-input-private-key" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-encoder-output-jwt-header">JWT header:</label>
+            <textarea class="form-control" id="jwt-encoder-input-jwt-header" rows="5"></textarea>
+            <label for="jwt-encoder-output-jwt-payload">JWT payload:</label>
+            <textarea class="form-control" id="jwt-encoder-input-jwt-payload" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <button type="button" class="btn btn-primary" onclick="encode()">Encode</button>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-encoder-output-jwt">JWT:</label>
+            <textarea class="form-control" id="jwt-encoder-output-jwt" rows="5" readonly></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      String.prototype.replaceAll = function(searchValue, replaceValue) {
+        return this.split(searchValue).join(replaceValue);
+      };
+
+      var Base64 = {
+        encode: function(plainText) {
+          return btoa(unescape(encodeURIComponent(plainText)));
+        },
+        decode: function(base64Encoded) {
+          return decodeURIComponent(escape(atob(base64Encoded)));
+        }
+      };
+
+      function base64UrlEncode(input) {
+        if (input.length == 0) {
+          return
+        }
+        try {
+          var value = Base64.encode(input);
+          return value.replaceAll('+', '-').replaceAll('/', '_');
+        } catch (error) {
+          alert('Faild to Base64 encode.\n' + error);
+        }
+      }
+     
+      function base64UrlDecode(input) {
+        if (input.length == 0) {
+          return
+        }
+        try {
+          return Base64.decode(input.replaceAll('-', '+').replaceAll('_', '/'));
+        } catch (error) {
+          alert('Faild to Base64 decode.\n' + error);
+        }
+      }
+
+      function convertBase64StringToArrayBuffer(base64) {
+        let binary = atob(base64);
+        let bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+
+      function convertArrayBufferToBase64String(buffer) {
+        let base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+        return base64;
+      }
+
+      function convertBase64UrlStringToArrayBuffer(base64Url) {
+        let base64 = base64Url.replaceAll('-', '+').replaceAll('_', '/')
+        return convertBase64StringToArrayBuffer(base64)
+      }
+
+      function convertArrayBufferToBase64UrlString(buffer) {
+        let base64 = convertArrayBufferToBase64String(buffer);
+        return base64.replaceAll('+', '-').replaceAll('/', '_');
+      }
+
+      function convertPemToBinary(pem) {
+        let lines = pem.split('\n');
+        let encoded = '';
+        for (var i = 0; i < lines.length; i++) {
+            if (lines[i].trim().length > 0 &&
+                lines[i].indexOf('-----BEGIN RSA PRIVATE KEY-----') < 0 &&
+                lines[i].indexOf('-----BEGIN RSA PUBLIC KEY-----') < 0 &&
+                lines[i].indexOf('-----BEGIN PUBLIC KEY-----') < 0 &&
+                lines[i].indexOf('-----END PUBLIC KEY-----') < 0 &&
+                lines[i].indexOf('-----BEGIN PRIVATE KEY-----') < 0 &&
+                lines[i].indexOf('-----END PRIVATE KEY-----') < 0 &&
+                lines[i].indexOf('-----END RSA PRIVATE KEY-----') < 0 &&
+                lines[i].indexOf('-----END RSA PUBLIC KEY-----') < 0) {
+                encoded += lines[i].trim();
+            }
+        }
+        return convertBase64StringToArrayBuffer(encoded);
+      }
+
+      function convertBinaryToPem(header, footer, arrayBuffer) {
+        let base64 = convertArrayBufferToBase64String(arrayBuffer)
+        let lines = []
+        lines.push(header);
+        while (base64.length > 0) {
+          lines.push(base64.substring(0, 64));
+          base64 = base64.substring(64);
+        }
+        lines.push(footer);
+        return lines.join('\n');
+      }
+
+      async function sign(algorithm, privateKey, text) {
+        const data = new TextEncoder().encode(text);
+        const signature = await window.crypto.subtle.sign(
+          algorithm,
+          privateKey,
+          data
+        )
+        return convertArrayBufferToBase64UrlString(signature);
+      }
+
+      async function verify(algorithm, publicKey, signature, text) {
+        const data = new TextEncoder().encode(text);
+        return await window.crypto.subtle.verify(
+          algorithm,
+          publicKey,
+          convertBase64UrlStringToArrayBuffer(signature),
+          data
+        )
+      }
+
+      async function importPrivateKey(algorithm, hash, pemPrivateKey) {
+        const privateKeyData = convertPemToBinary(pemPrivateKey);
+        const privateKey = await window.crypto.subtle.importKey(
+          'pkcs8',
+          privateKeyData,
+          {
+            name: algorithm,
+            hash: { name: hash }
+          },
+          true,
+          ['sign']
+        );
+        return privateKey;
+      }
+
+      async function importPublicKey(algorithm, hash, pemPublicKey) {
+        const publicKeyData = convertPemToBinary(pemPublicKey);
+        const publicKey = await window.crypto.subtle.importKey(
+          'spki',
+          publicKeyData,
+          {
+            name: algorithm,
+            hash: { name: hash }
+          },
+          true,
+          ['verify']
+        );
+        return publicKey;
+      }
+
+      async function encode() {
+        const header = document.getElementById('jwt-encoder-input-jwt-header').value;
+        const payload = document.getElementById('jwt-encoder-input-jwt-payload').value;
+
+        const headerAndPayload = [
+          base64UrlEncode(JSON.stringify(JSON.parse(header))).replaceAll('=', ''),
+          base64UrlEncode(JSON.stringify(JSON.parse(payload))).replaceAll('=', '')
+        ].join('.');
+
+        let algorithm = document.getElementById('jwt-encoder-input-algorithm').value;
+        let hash = document.getElementById('jwt-encoder-input-hash').value;
+        let pemPrivateKey = document.getElementById('jwt-encoder-input-private-key').value;
+        const privateKey = await importPrivateKey(algorithm, hash, pemPrivateKey);
+        const signature = await sign(algorithm, privateKey, headerAndPayload);
+
+        document.getElementById('jwt-encoder-output-jwt').value = [
+          base64UrlEncode(JSON.stringify(JSON.parse(header))).replaceAll('=', ''),
+          base64UrlEncode(JSON.stringify(JSON.parse(payload))).replaceAll('=', ''),
+          signature.replaceAll('=', '')
+        ].join('.');
+      }
+
+      async function decode() {
+        const jwt = document.getElementById('jwt-decoder-input-jwt').value;
+
+        const jwtComponents = jwt.split('.')
+        if (jwtComponents.length != 3) {
+          return;
+        }
+
+        const header = jwtComponents[0];
+        const payload = jwtComponents[1];
+        const signature = jwtComponents[2];
+        const headerAndPayload = [header, payload].join('.');
+
+        let algorithm = document.getElementById('jwt-decoder-input-algorithm').value;
+        let hash = document.getElementById('jwt-decoder-input-hash').value;
+        let pemPublicKey = document.getElementById('jwt-decoder-input-public-key').value;
+        const publicKey = await importPublicKey(algorithm, hash, pemPublicKey);
+        const result = await verify(algorithm, publicKey, signature, headerAndPayload);
+
+        document.getElementById('jwt-decoder-output-jwt-header').value = JSON.stringify(JSON.parse(base64UrlDecode(header)), null, 2);
+        document.getElementById('jwt-decoder-output-jwt-payload').value = JSON.stringify(JSON.parse(base64UrlDecode(payload)), null, 2);
+        document.getElementById('jwt-decoder-output-jwt-signature').value = signature;
+        document.getElementById('jwt-decoder-output-jwt-verification').value = result ? 'signature is valid' : 'signature is invalid';
+      }
+
+      window.onload = function() {
+        document.getElementById('jwt-encoder-input-private-key').value = `-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDE0rNMHVWREuyG
+jHTcdYbLuduqp+kUN+hyhPvkMPM0uHQcnxnsWCJIOuPZTsOGv6iY6YdZ43n1YKTo
+Tq/0KWoSxDrV4hG2+lGlH+P2rek+1Pe4VnZsH5ATxmGYCQ2HdlKn/e2z8xX1dT5W
+2nDDQYc8FjnrW8i8PbqtLSrfW6aGUy3/rnpegsilzozvuAZhvDmfN3QjgyHgibfE
+IM+MrcNuSFKatQCw7qN3+0l6IhVIPeYyUn34QthQhNWGioi9dXO0OhrM/2NmsMwz
+sgSSZKKAvxQ5/Hwu8TecqLrVYw/xcvhsUWQlFcFKuHJGLaIQzT9wrKwoFfMxr1ru
+G17ONz89AgMBAAECggEAFEG/NFE8kj7JWxuvl1T9N5B8XDcF1Q/f+5FWP2kOTtnB
+EYUKbPmxJY/yDVZ+5ypolrxKMuUnkyqMLmCS2WU9xoqtp3+p5RQkPQNoOeYyQEY4
+7J7xdzVUZcSgHL6pxsxVu3Z19XRKSUX00YmP23iuC3AaK+/5W+5afSJN7EkJfX95
+3IQIYCV5KfkTi/pLhs0i2StO7/zy7XvfDPxN9OGXm7tkYFW4szyVbo6hHi6oa4ZG
+oaDVNBXLY5gw3TCQqLbPxwPCxOvn3pgcgc20viR7qnI5rhUOU9pKNipRK0wphjjS
+KOci9NLZ31H8otWhuYA5sRnIrLFosmej2UX8fR8V/QKBgQDoAyILkaUL0JG82r7o
+ghgdqo7k1kcMg5Sr8lNK5WED54u/Z+og3efhGDO9FBiXwrDMlLp6/dMZqZlFH0xc
+/RhcrIaPksQpWqhdziQRPUOfrwwx7EG8zvh0CXT88BYCWFOeo15/fiVDniW/3E0P
+IUixregb67+Y9mXM4CoXlhIAVwKBgQDZLC9V7v4Zw/WXYGTPpYvU+FWDJSjYDQic
+M7+qyk+ADgryK3aw4HOMUn5FgfEZ2PKfBxah+Inz9nMoDZ34/wu8XU4jjJDlnkVE
+iWABYZt1QNUTZ4xaJ6mW4sWMaxOPPAvKNx499aAdpNX0AUQHwMxbAP6Q0ynbBEd1
+MqZ61S1wiwKBgB0MD14dbOluwmA/jrkzWGuWZ+90eE6zxpBEdXMiBqRjf9aF3wUg
+YyCGVCvu8SlG4bWrRTGSx7QlzJ+fzIKz2TH5E5u0B0UaKYwc+90Aq4+5bbBuYMiP
+rQFyEah9MnQ2tLlewLz7gRTXHujHXwpu41gDatTcDg/LgXFF+18alcRfAoGAOU0b
+QEVK7mlyB3r7nn5DovHTPkMzv63Qs8ZDsECpMVSDNtqY+pp+YmvxvU1H3FYNzkAE
+jMATRjekstDE+cnxwsWrtF2Gbc+Q30CQAE1Mw2dT0UblFXSZnqI/FYm7I3PoeHaK
+mDaTBL9VZIhg9tq8ENb2VCgjRxKd+CJhIs/UqXkCgYAxwA5ES7taKW+m6JRv3qcl
+rmDNIBSfkhRolOyFcthhJXyn4gKPR0ZZryZu3A/hsWt3o6k2n1nFJX6M7rbZHHt5
+ls5FUN8bdEM3mCGVh3GjhEBOal4hUEmpQbat5/eoJud1ARbTgLb4rhYU8H8QI3oW
+NQiSW/qgxw2cQosLs+40ug==
+-----END PRIVATE KEY-----`
+
+        document.getElementById('jwt-decoder-input-public-key').value = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxNKzTB1VkRLshox03HWG
+y7nbqqfpFDfocoT75DDzNLh0HJ8Z7FgiSDrj2U7Dhr+omOmHWeN59WCk6E6v9Clq
+EsQ61eIRtvpRpR/j9q3pPtT3uFZ2bB+QE8ZhmAkNh3ZSp/3ts/MV9XU+Vtpww0GH
+PBY561vIvD26rS0q31umhlMt/656XoLIpc6M77gGYbw5nzd0I4Mh4Im3xCDPjK3D
+bkhSmrUAsO6jd/tJeiIVSD3mMlJ9+ELYUITVhoqIvXVztDoazP9jZrDMM7IEkmSi
+gL8UOfx8LvE3nKi61WMP8XL4bFFkJRXBSrhyRi2iEM0/cKysKBXzMa9a7htezjc/
+PQIDAQAB
+-----END PUBLIC KEY-----`
+
+        document.getElementById('jwt-decoder-input-jwt').value = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.gvHGzeY_LwhCjA_LVE0d25fxWic7oV-9qM9vjNhlnfI5EKVXN7yCVGpig5b6EclKGXcxtWrIi7EHV7l5nttKG2m_UQhrA_V6w9DoIR0X2VIvm-_vCv3vibztZpQli2xongqQ-1_vaS0iVIQl_G2c74wBJukmCKMhgO2v7AbZIOUjnkzFSeQB-Kv2Ty8HsuPw4GYQS2Y6q1VTmZcbvuZzFAaeM5kWQkh-krivWqqUTCSccMovzL-baRk4l0BgOtNG6-6rzlD6HMgJLAPBXvgUJ10tg6C_QM3cmMUEJRuCaF7oMh7FQx7v7fjluA-8bfVSBHldQOfuT21TwLO8hcAA3w`
+
+        document.getElementById('jwt-encoder-input-jwt-header').value = `{
+  "alg": "RS256",
+  "typ": "JWT"
+}`
+        document.getElementById('jwt-encoder-input-jwt-payload').value = `{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true,
+  "iat": 1516239022
+}`
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+  </body>
+</html>
