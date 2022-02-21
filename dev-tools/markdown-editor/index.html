@@ -19,12 +19,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.css">
     <link rel="stylesheet" href="../common/css/light.css">
     <link rel="stylesheet" href='../common/lib/highlight.js/styles/github.css'></link>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.14.0/mermaid.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/display/autorefresh.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/mode/overlay.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/mode/simple.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/markdown/markdown.js"></script>
     <script src="../common/lib/codemirror/mode/gfm.js"></script>
+    <script src="../common/lib/codemirror/mode/mermaid.js"></script>
     <style>
       .CodeMirror {
         height: 100%;
@@ -259,13 +262,27 @@
       hljs.initHighlightingOnLoad();
 
       // initialize marked
-      marked.setOptions({
-          langPrefix: '',
-          headerIds: false,
-          highlight: (code, lang) => {
-            return hljs.highlightAuto(code, [lang]).value
+      const renderer = new marked.Renderer();
+      renderer.defaultCode = renderer.code;
+      renderer.code = (code, lang) => {
+        if (lang == 'mermaid') {
+          try {
+            const svg = mermaid.render('mermaid-diagram', code);
+            return `<div class="mermaid-diagram">${svg}</div></div>`;
+          } catch (error) {
+            renderer.defaultCode(code, 'txt');
           }
-        });
+        }
+        return renderer.defaultCode(code, lang);
+      };
+      marked.setOptions({
+        langPrefix: '',
+        headerIds: false,
+        highlight: (code, lang) => {
+          return hljs.highlightAuto(code, [lang]).value
+        },
+        renderer: renderer
+      });
 
       $(document).ready(() => {
         renderMarkdwon(source);
