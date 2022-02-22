@@ -262,12 +262,14 @@
       hljs.initHighlightingOnLoad();
 
       // initialize marked
+      let diagramIndex = 0;
       const renderer = new marked.Renderer();
       renderer.defaultCode = renderer.code;
       renderer.code = (code, lang) => {
         if (lang == 'mermaid') {
           try {
-            const svg = mermaid.render('mermaid-diagram', code);
+            diagramIndex++;
+            const svg = mermaid.render(`mermaid-diagram-${diagramIndex}`, code);
             return `<div class="mermaid-diagram">${svg}</div></div>`;
           } catch (error) {
             renderer.defaultCode(code, 'txt');
