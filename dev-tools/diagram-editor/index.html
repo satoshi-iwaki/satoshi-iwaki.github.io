@@ -170,9 +170,11 @@
       function insertSvg(svgCode, bindFunctions) {
         diagram.innerHTML = svgCode;
         if (typeof callback !== 'undefined') {
-            callback(id);
+          callback(id);
         }
-        bindFunctions(diagram);
+        if (bindFunctions) {
+          bindFunctions(diagram);
+        }
       };
 
       function renderDiagram(text) {
