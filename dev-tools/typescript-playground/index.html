@@ -26,7 +26,6 @@
       .CodeMirror {
         height: 100%;
       }
-      .cm-mustache {color: #0ca;}
       .editor-container {
         border: 1px solid #eee;
         width: 100%;
@@ -76,11 +75,15 @@
         </div>
       </div>
       <div class="row row-container">
-        <div class="col-md-6 order-md-1 col-container">
+        <div class="col-md-4 order-md-1 col-container">
           <div class="editor-container" id="input-script-container">
           </div>
         </div>
-        <div class="col-md-6 order-md-2 col-container">
+        <div class="col-md-4 order-md-2 col-container">
+          <div class="editor-container" id="output-script-container">
+          </div>
+        </div>
+        <div class="col-md-4 order-md-3 col-container">
           <div class="editor-container" id="output-console-container">
           </div>
         </div>
@@ -127,7 +130,16 @@ console.log(message);
         inputTypescript = instance.getValue();
       });
 
-      var output = CodeMirror(document.getElementById('output-console-container'), {
+      var outputScriptEditor = CodeMirror(document.getElementById('output-script-container'), {
+        value: "",
+        lineNumbers: true,
+        autoRefresh: true,
+        readOnly: true,
+        selectionsMayTouch: true,
+        mode: 'javascript'
+      });
+
+      var outputConsole = CodeMirror(document.getElementById('output-console-container'), {
         value: "",
         lineNumbers: true,
         autoRefresh: true,
@@ -137,22 +149,23 @@ console.log(message);
       });
 
       consoleUtils.writeOutput = function(content) {
-        var outputContent = output.getValue();
+        var outputContent = outputConsole.getValue();
         var newLogItem = '> ' + content + '\n';
-        output.setValue(outputContent + newLogItem);
+        outputConsole.setValue(outputContent + newLogItem);
       }
 
       function execute() {
         try {
-            const inputJavascript = window.ts.transpile(inputTypescript);
-            new Function(inputJavascript)();
+            const outputJavascript = window.ts.transpile(inputTypescript);
+            outputScriptEditor.setValue(outputJavascript);
+            new Function(outputJavascript)();
         } catch (event) {
-          output.setValue('Error: ' + event.message+ '\n')
+          outputConsole.setValue('Error: ' + event.message+ '\n')
         }
       }
 
       function clearConsole() {
-        output.setValue('');
+        outputConsole.setValue('');
       }
 
       $(document).ready(() => {
