@@ -39,6 +39,9 @@
             <button type="button" class="btn btn-primary" onclick="match()">Match</button>
           </div>
           <div class="mb-3">
+            <button type="button" class="btn btn-primary" onclick="matchAll()">Match All</button>
+          </div>
+          <div class="mb-3">
             <label for="regexp-output">RegExp:</label>
             <textarea class="form-control" id="regexp-output" rows="3" readonly></textarea>
           </div>
@@ -54,11 +57,25 @@
         let textInput = document.getElementById('text-input').value;
         let patternInput = document.getElementById('regexp-pattern-input').value;
         let flagsInput = document.getElementById('regexp-flags-input').value;
-        let regexp = new RegExp(patternInput, 'g');
+        let regexp = new RegExp(patternInput, flagsInput);
 
         document.getElementById('regexp-output').value = regexp;
         let result = textInput.match(regexp);
         document.getElementById('text-output').value = result;
+      }
+
+      function matchAll() {
+        let textInput = document.getElementById('text-input').value;
+        let patternInput = document.getElementById('regexp-pattern-input').value;
+        let flagsInput = document.getElementById('regexp-flags-input').value;
+        let regexp = new RegExp(patternInput, flagsInput);
+
+        document.getElementById('regexp-output').value = regexp;
+        let results = textInput.matchAll(regexp);
+        document.getElementById('text-output').value = '';
+        for (let result of results) {
+          document.getElementById('text-output').value += JSON.stringify(result);
+        }
       }
 
       const example = `The quick brown fox jumps over the lazy dog.

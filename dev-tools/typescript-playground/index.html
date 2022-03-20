@@ -66,6 +66,19 @@
         <div class="col-md-12 order-md-1">
           <div class="btn-toolbar mb-1 justify-content-center" role="toolbar">
             <div class="btn-group me-2" role="group">
+              <label for="typescript-compiler-options-target">Target:</label>
+              <select class="form-select" aria-label="Target" id="typescript-compiler-options-target">
+                <option value="es2021">ES2021 (ES12)</option>
+                <option selected value="es2020">ES2020 (ES11)</option>
+                <option value="es2019">ES2019 (ES10)</option>
+                <option value="es2018">ES2018 (ES9)</option>
+                <option value="es2017">ES2017 (ES8)</option>
+                <option value="es2016">ES2016 (ES7)</option>
+                <option value="es2015">ES2015 (ES6)</option>
+                <option value="es5">ES5</option>
+              </select>
+            </div>
+            <div class="btn-group me-2" role="group">
               <a class="btn btn-primary" id="execute" role="button" href="#" onclick="execute()">Run</a>
             </div>
             <div class="btn-group me-2" role="group">
@@ -154,11 +167,17 @@ console.log(message);
         outputConsole.setValue(outputContent + newLogItem);
       }
 
+      var compilerOptions = {
+        target: 'es2020',
+        module: 'commonjs'
+      }
+
       function execute() {
         try {
-            const outputJavascript = window.ts.transpile(inputTypescript);
-            outputScriptEditor.setValue(outputJavascript);
-            new Function(outputJavascript)();
+          compilerOptions.target = document.getElementById('typescript-compiler-options-target').value;
+          const outputJavascript = window.ts.transpile(inputTypescript, compilerOptions);
+          outputScriptEditor.setValue(outputJavascript);
+          new Function(outputJavascript)();
         } catch (event) {
           outputConsole.setValue('Error: ' + event.message+ '\n')
         }
