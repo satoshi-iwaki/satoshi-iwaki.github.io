@@ -18,25 +18,59 @@
     <div class="container-fluid">
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <button class="nav-link active" id="jwt-decoder-tab" data-bs-toggle="tab" data-bs-target="#jwt-decoder" type="button" role="tab" aria-controls="jwt-decoder" aria-selected="true">Decode (Verify signature)</button>
-          <button class="nav-link" id="jwt-encoder-tab" data-bs-toggle="tab" data-bs-target="#jwt-encoder" type="button" role="tab" aria-controls="jwt-encoder" aria-selected="true">Encode (Sign)</button>
+          <button class="nav-link active" id="jwt-encoder-tab" data-bs-toggle="tab" data-bs-target="#jwt-encoder" type="button" role="tab" aria-controls="jwt-encoder" aria-selected="true">Encode (Sign)</button>
+          <button class="nav-link" id="jwt-decoder-tab" data-bs-toggle="tab" data-bs-target="#jwt-decoder" type="button" role="tab" aria-controls="jwt-decoder" aria-selected="true">Decode (Verify signature)</button>
         </div>
       </nav>
       <div class="tab-content">
-        <div class="tab-pane fade show active" id="jwt-decoder" role="tabpanel" aria-labelledby="jwt-decoder-tab">
+        <div class="tab-pane fade show active" id="jwt-encoder" role="tabpanel" aria-labelledby="jwt-encoder-tab">
           <div class="mb-3">
-            <label for="jwt-decoder-input-algorithm">Algorithm:</label>
-            <select class="form-select" aria-label="Algorithm" id="jwt-decoder-input-algorithm">
-              <option selected value="RSASSA-PKCS1-v1_5">RSASSA-PKCS1-v1_5</option>
-              <option value="RSA-PSS">RSA-PSS</option>
+            <label for="jwt-encoder-input-jwt-algorithm">Algorithm:</label>
+            <select class="form-select" aria-label="Algorithm" id="jwt-encoder-input-jwt-algorithm">
+              <option selected value="RS256">RS256</option>
+              <option value="RS384">RS384</option>
+              <option value="RS512">RS512</option>
+              <option value="PS256">PS256</option>
+              <option value="PS384">PS384</option>
+              <option value="PS512">PS512</option>
+              <option value="ES256">ES256</option>
+              <option value="ES384">ES384</option>
+              <option value="ES512">ES512</option>
+              <option value="ES256K">ES256K</option>
             </select>
           </div>
           <div class="mb-3">
-            <label for="jwt-decoder-input-hash">Hash:</label>
-            <select class="form-select" aria-label="Hash" id="jwt-decoder-input-hash">
-              <option selected value="SHA-256">SHA-256</option>
-              <option value="SHA-384">SHA-384</option>
-              <option value="SHA-512">SHA-512</option>
+            <label for="jwt-encoder-input-private-key">PEM private key:</label>
+            <textarea class="form-control" id="jwt-encoder-input-private-key" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-encoder-input-jwt-header">JWT header:</label>
+            <textarea class="form-control" id="jwt-encoder-input-jwt-header" rows="5"></textarea>
+            <label for="jwt-encoder-input-jwt-payload">JWT payload:</label>
+            <textarea class="form-control" id="jwt-encoder-input-jwt-payload" rows="5"></textarea>
+          </div>
+          <div class="mb-3">
+            <button type="button" class="btn btn-primary" onclick="encode()">Encode</button>
+          </div>
+          <div class="mb-3">
+            <label for="jwt-encoder-output-jwt">JWT:</label>
+            <textarea class="form-control" id="jwt-encoder-output-jwt" rows="5" readonly></textarea>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="jwt-decoder" role="tabpanel" aria-labelledby="jwt-decoder-tab">
+          <div class="mb-3">
+            <label for="jwt-decoder-input-jwt-algorithm">Algorithm:</label>
+            <select class="form-select" aria-label="Algorithm" id="jwt-decoder-input-jwt-algorithm">
+              <option selected value="RS256">RS256</option>
+              <option value="RS384">RS384</option>
+              <option value="RS512">RS512</option>
+              <option value="PS256">PS256</option>
+              <option value="PS384">PS384</option>
+              <option value="PS512">PS512</option>
+              <option value="ES256">ES256</option>
+              <option value="ES384">ES384</option>
+              <option value="ES512">ES512</option>
+              <option value="ES256K">ES256K</option>
             </select>
           </div>
           <div class="mb-3">
@@ -57,42 +91,8 @@
             <textarea class="form-control" id="jwt-decoder-output-jwt-payload" rows="5" readonly></textarea>
             <label for="jwt-decoder-output-jwt-signature">JWT signature:</label>
             <textarea class="form-control" id="jwt-decoder-output-jwt-signature" rows="5" readonly></textarea>
-            <label for="jwt-decoder-output-jwt-signature">Signature verification result:</label>
+            <label for="jwt-decoder-output-jwt-verification">Signature verification result:</label>
             <textarea class="form-control" id="jwt-decoder-output-jwt-verification" rows="1" readonly></textarea>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="jwt-encoder" role="tabpanel" aria-labelledby="jwt-encoder-tab">
-          <div class="mb-3">
-            <label for="jwt-encoder-input-algorithm">Algorithm:</label>
-            <select class="form-select" aria-label="Algorithm" id="jwt-encoder-input-algorithm">
-              <option selected value="RSASSA-PKCS1-v1_5">RSASSA-PKCS1-v1_5</option>
-              <option value="RSA-PSS">RSA-PSS</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="jwt-encoder-input-hash">Hash:</label>
-            <select class="form-select" aria-label="Hash" id="jwt-encoder-input-hash">
-              <option selected value="SHA-256">SHA-256</option>
-              <option value="SHA-384">SHA-384</option>
-              <option value="SHA-512">SHA-512</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="jwt-encoder-input-private-key">PEM private key:</label>
-            <textarea class="form-control" id="jwt-encoder-input-private-key" rows="5"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="jwt-encoder-output-jwt-header">JWT header:</label>
-            <textarea class="form-control" id="jwt-encoder-input-jwt-header" rows="5"></textarea>
-            <label for="jwt-encoder-output-jwt-payload">JWT payload:</label>
-            <textarea class="form-control" id="jwt-encoder-input-jwt-payload" rows="5"></textarea>
-          </div>
-          <div class="mb-3">
-            <button type="button" class="btn btn-primary" onclick="encode()">Encode</button>
-          </div>
-          <div class="mb-3">
-            <label for="jwt-encoder-output-jwt">JWT:</label>
-            <textarea class="form-control" id="jwt-encoder-output-jwt" rows="5" readonly></textarea>
           </div>
         </div>
       </div>
@@ -189,10 +189,53 @@
         return lines.join('\n');
       }
 
+      function getSignVerifyParams(algorithm) {
+        switch (algorithm) {
+          // See https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/sign
+          // See https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/verify
+          case 'RS256':
+          case 'RS384':
+          case 'RS512':
+            // return 'RSASSA-PKCS1-v1_5';
+            return {
+              "name": "RSASSA-PKCS1-v1_5"
+            }
+          
+          // RsaPssParams
+          // See https://developer.mozilla.org/en-US/docs/Web/API/RsaPssParams
+          case 'PS256':
+          case 'PS384':
+          case 'PS512':
+          return {
+              name: 'RSA-PSS',
+              saltLength: 0
+            }
+          
+          // EcdsaParams
+          // See https://developer.mozilla.org/en-US/docs/Web/API/EcdsaParams
+          case 'ES256':
+            return {
+              name: 'ECDSA',
+              hash: 'SHA-256'
+            }
+          case 'ES384':
+            return {
+                name: 'ECDSA',
+                hash: 'SHA-384'
+              }
+          case 'ES512':
+            return {
+                name: 'ECDSA',
+                hash: 'SHA-512'
+              }
+        }
+      }
+
       async function sign(algorithm, privateKey, text) {
         const data = new TextEncoder().encode(text);
+        const params = getSignVerifyParams(algorithm);
         const signature = await window.crypto.subtle.sign(
-          algorithm,
+          params,
           privateKey,
           data
         )
@@ -201,38 +244,90 @@
 
       async function verify(algorithm, publicKey, signature, text) {
         const data = new TextEncoder().encode(text);
+        const params = getSignVerifyParams(algorithm);
         return await window.crypto.subtle.verify(
-          algorithm,
+          params,
           publicKey,
           convertBase64UrlStringToArrayBuffer(signature),
           data
         )
       }
 
-      async function importPrivateKey(algorithm, hash, pemPrivateKey) {
+      function getImportParams(algorithm) {
+        switch (algorithm) {
+          // RsaHashedImportParams
+          // See https://developer.mozilla.org/en-US/docs/Web/API/RsaHashedImportParams
+          case 'RS256':
+            return {
+              name: 'RSASSA-PKCS1-v1_5',
+              hash: 'SHA-256'
+            }
+          case 'RS384':
+            return {
+              name: 'RSASSA-PKCS1-v1_5',
+              hash: 'SHA-384'
+            }
+          case 'RS512':
+            return {
+              name: 'RSASSA-PKCS1-v1_5',
+              hash: 'SHA-512'
+            }
+          case 'PS256':
+            return {
+              name: 'RSA-PSS',
+              hash: 'SHA-256'
+            }
+          case 'PS384':
+            return {
+              name: 'RSA-PSS',
+              hash: 'SHA-384'
+            }
+          case 'PS512':
+            return {
+              name: 'RSA-PSS',
+              hash: 'SHA-512'
+            }
+            
+          // EcKeyImportParams
+          // See https://developer.mozilla.org/en-US/docs/Web/API/EcKeyImportParams
+          case 'ES256':
+            return {
+              name: 'ECDSA',
+              namedCurve: 'P-256'
+            }
+          case 'ES384':
+            return {
+              name: 'ECDSA',
+              namedCurve: 'P-384'
+            }
+          case 'ES512':
+            return {
+              name: 'ECDSA',
+              namedCurve: 'P-521'
+            }
+        }
+      }
+
+      async function importPrivateKey(algorithm, pemPrivateKey) {
         const privateKeyData = convertPemToBinary(pemPrivateKey);
+        const params = getImportParams(algorithm);
         const privateKey = await window.crypto.subtle.importKey(
           'pkcs8',
           privateKeyData,
-          {
-            name: algorithm,
-            hash: { name: hash }
-          },
+          params,
           true,
           ['sign']
         );
         return privateKey;
       }
 
-      async function importPublicKey(algorithm, hash, pemPublicKey) {
+      async function importPublicKey(algorithm, pemPublicKey) {
         const publicKeyData = convertPemToBinary(pemPublicKey);
+        const params = getImportParams(algorithm);
         const publicKey = await window.crypto.subtle.importKey(
           'spki',
           publicKeyData,
-          {
-            name: algorithm,
-            hash: { name: hash }
-          },
+          params,
           true,
           ['verify']
         );
@@ -248,10 +343,9 @@
           base64UrlEncode(JSON.stringify(JSON.parse(payload))).replaceAll('=', '')
         ].join('.');
 
-        let algorithm = document.getElementById('jwt-encoder-input-algorithm').value;
-        let hash = document.getElementById('jwt-encoder-input-hash').value;
-        let pemPrivateKey = document.getElementById('jwt-encoder-input-private-key').value;
-        const privateKey = await importPrivateKey(algorithm, hash, pemPrivateKey);
+        const algorithm = document.getElementById('jwt-encoder-input-jwt-algorithm').value;
+        const pemPrivateKey = document.getElementById('jwt-encoder-input-private-key').value;
+        const privateKey = await importPrivateKey(algorithm, pemPrivateKey);
         const signature = await sign(algorithm, privateKey, headerAndPayload);
 
         document.getElementById('jwt-encoder-output-jwt').value = [
@@ -274,10 +368,9 @@
         const signature = jwtComponents[2];
         const headerAndPayload = [header, payload].join('.');
 
-        let algorithm = document.getElementById('jwt-decoder-input-algorithm').value;
-        let hash = document.getElementById('jwt-decoder-input-hash').value;
-        let pemPublicKey = document.getElementById('jwt-decoder-input-public-key').value;
-        const publicKey = await importPublicKey(algorithm, hash, pemPublicKey);
+        const algorithm = document.getElementById('jwt-decoder-input-jwt-algorithm').value;
+        const pemPublicKey = document.getElementById('jwt-decoder-input-public-key').value;
+        const publicKey = await importPublicKey(algorithm, pemPublicKey);
         const result = await verify(algorithm, publicKey, signature, headerAndPayload);
 
         document.getElementById('jwt-decoder-output-jwt-header').value = JSON.stringify(JSON.parse(base64UrlDecode(header)), null, 2);
