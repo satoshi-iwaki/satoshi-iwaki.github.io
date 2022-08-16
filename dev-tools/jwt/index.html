@@ -206,7 +206,7 @@
           case 'PS256':
           case 'PS384':
           case 'PS512':
-          return {
+            return {
               name: 'RSA-PSS',
               saltLength: 0
             }
@@ -220,14 +220,14 @@
             }
           case 'ES384':
             return {
-                name: 'ECDSA',
-                hash: 'SHA-384'
-              }
+              name: 'ECDSA',
+              hash: 'SHA-384'
+            }
           case 'ES512':
             return {
-                name: 'ECDSA',
-                hash: 'SHA-512'
-              }
+              name: 'ECDSA',
+              hash: 'SHA-512'
+            }
         }
       }
 
@@ -337,7 +337,6 @@
       async function encode() {
         const header = document.getElementById('jwt-encoder-input-jwt-header').value;
         const payload = document.getElementById('jwt-encoder-input-jwt-payload').value;
-
         const headerAndPayload = [
           base64UrlEncode(JSON.stringify(JSON.parse(header))).replaceAll('=', ''),
           base64UrlEncode(JSON.stringify(JSON.parse(payload))).replaceAll('=', '')
@@ -346,13 +345,17 @@
         const algorithm = document.getElementById('jwt-encoder-input-jwt-algorithm').value;
         const pemPrivateKey = document.getElementById('jwt-encoder-input-private-key').value;
         const privateKey = await importPrivateKey(algorithm, pemPrivateKey);
-        const signature = await sign(algorithm, privateKey, headerAndPayload);
 
-        document.getElementById('jwt-encoder-output-jwt').value = [
-          base64UrlEncode(JSON.stringify(JSON.parse(header))).replaceAll('=', ''),
-          base64UrlEncode(JSON.stringify(JSON.parse(payload))).replaceAll('=', ''),
-          signature.replaceAll('=', '')
-        ].join('.');
+        try {
+          const signature = await sign(algorithm, privateKey, headerAndPayload);
+          document.getElementById('jwt-encoder-output-jwt').value = [
+            base64UrlEncode(JSON.stringify(JSON.parse(header))).replaceAll('=', ''),
+            base64UrlEncode(JSON.stringify(JSON.parse(payload))).replaceAll('=', ''),
+            signature.replaceAll('=', '')
+          ].join('.');
+        } catch(error) {
+          document.getElementById('jwt-encoder-output-jwt').value = 'Failed to sign.';
+        }
       }
 
       async function decode() {
@@ -371,12 +374,16 @@
         const algorithm = document.getElementById('jwt-decoder-input-jwt-algorithm').value;
         const pemPublicKey = document.getElementById('jwt-decoder-input-public-key').value;
         const publicKey = await importPublicKey(algorithm, pemPublicKey);
-        const result = await verify(algorithm, publicKey, signature, headerAndPayload);
 
         document.getElementById('jwt-decoder-output-jwt-header').value = JSON.stringify(JSON.parse(base64UrlDecode(header)), null, 2);
         document.getElementById('jwt-decoder-output-jwt-payload').value = JSON.stringify(JSON.parse(base64UrlDecode(payload)), null, 2);
         document.getElementById('jwt-decoder-output-jwt-signature').value = signature;
-        document.getElementById('jwt-decoder-output-jwt-verification').value = result ? 'signature is valid' : 'signature is invalid';
+        try {
+          const result = await verify(algorithm, publicKey, signature, headerAndPayload);
+          document.getElementById('jwt-decoder-output-jwt-verification').value = result ? 'Ssignature is valid' : 'Signature is invalid';
+        } catch(error) {
+          document.getElementById('jwt-decoder-output-jwt-verification').value = 'Failed to verify signature.';
+        }
       }
 
       window.onload = function() {
