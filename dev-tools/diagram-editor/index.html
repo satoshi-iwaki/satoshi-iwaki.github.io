@@ -134,44 +134,6 @@
           }
       };
 
-      // initialize source editor
-      const sourceTextarea = document.getElementById('source-textarea');
-      sourceTextarea.value = source;
-      const sourceEditor = CodeMirror.fromTextArea(sourceTextarea, {
-          lineNumbers: true,
-          autoRefresh:true,
-          mode: 'mermaid'
-      });
-      sourceEditor.on('change', function(doc, changeObj) {
-        source = doc.getValue();
-        renderDiagram(source);
-      });
-
-      // initialize configuration editor
-      const configurationTextarea = document.getElementById('configuration-textarea');
-      configurationTextarea.value = JSON.stringify(configuration, null, 2);
-      const configurationEditor = CodeMirror.fromTextArea(configurationTextarea, {
-          lineNumbers: true,
-          autoRefresh:true,
-          mode: 'application/json'
-      });
-      configurationEditor.on('change', function(doc, changeObj) {
-        const text = doc.getValue();
-        try {
-          configuration = JSON.parse(text);
-        } catch (e) {
-          // ignore error
-        }
-        setConfiguration(configuration);
-        renderDiagram(source);
-      });
-
-      // initialize mermaid
-      mermaid.initialize(configuration);
-      mermaid.parseError = function(err, hash) {
-        // ignore error
-      };
-
       function setConfiguration(config) {
         try {
           mermaid.initialize(config);
@@ -236,8 +198,45 @@
         image.src = svgDataUrl;
       }
 
-      initializeMermaid();
       renderDiagram(source);
+
+      // initialize mermaid
+      mermaid.initialize(configuration);
+      mermaid.parseError = function(err, hash) {
+        // ignore error
+      };
+
+      // initialize source editor
+      const sourceTextarea = document.getElementById('source-textarea');
+      sourceTextarea.value = source;
+      const sourceEditor = CodeMirror.fromTextArea(sourceTextarea, {
+          lineNumbers: true,
+          autoRefresh:true,
+          mode: 'mermaid'
+      });
+      sourceEditor.on('change', function(doc, changeObj) {
+        source = doc.getValue();
+        renderDiagram(source);
+      });
+
+      // initialize configuration editor
+      const configurationTextarea = document.getElementById('configuration-textarea');
+      configurationTextarea.value = JSON.stringify(configuration, null, 2);
+      const configurationEditor = CodeMirror.fromTextArea(configurationTextarea, {
+          lineNumbers: true,
+          autoRefresh:true,
+          mode: 'application/json'
+      });
+      configurationEditor.on('change', function(doc, changeObj) {
+        const text = doc.getValue();
+        try {
+          configuration = JSON.parse(text);
+        } catch (e) {
+          // ignore error
+        }
+        setConfiguration(configuration);
+        renderDiagram(source);
+      });
 
       $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         renderDiagram(source);
