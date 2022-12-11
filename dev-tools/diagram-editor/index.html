@@ -156,10 +156,9 @@
           mode: 'application/json'
       });
       configurationEditor.on('change', function(doc, changeObj) {
-        var text = doc.getValue();
+        const text = doc.getValue();
         try {
-          var json = JSON.parse(text);
-          configuration = json;
+          configuration = JSON.parse(text);
         } catch (e) {
           // ignore error
         }
