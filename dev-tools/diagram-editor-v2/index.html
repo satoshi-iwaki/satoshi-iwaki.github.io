@@ -14,18 +14,8 @@
     <title>Diagram editor</title>
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <!-- CodeMirror and mermaid -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/codemirror.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/codemirror.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/addon/mode/simple.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/mode/javascript/javascript.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/addon/display/autorefresh.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.2.2/mermaid.min.js"></script>
-    <script src="../common/lib/codemirror/mode/mermaid.js"></script>
     <style>
-      .CodeMirror {
-        height: 100%;
-      }
       .diagram-container {
         border: 1px solid #eee;
         background-color: white;
@@ -88,8 +78,7 @@
           </div>
           <div class="row row-container">
             <div class="col-md-5 order-md-1 col-container">
-              <div class="editor-container">
-                <textarea class="editor-textarea" id="source-textarea" rows="3" readonly></textarea>
+              <div class="editor-container" id="source-editor-container">
               </div>
             </div>
             <div class="col-md-7 order-md-2 col-container">
@@ -100,8 +89,7 @@
         <div class="tab-pane fade" id="configuration-editor-tab-pane" role="tabpanel" aria-labelledby="configuration-editor-tab">
           <div class="row row-container">
             <div class="col-md-5 order-md-1 col-container">
-              <div class="editor-container">
-                <textarea class="editor-textarea" id="configuration-textarea" rows="3" readonly></textarea>
+              <div class="editor-container" id="configuration-editor-container">
               </div>
             </div>
             <div class="col-md-7 order-md-2 col-container">
@@ -205,38 +193,50 @@
       mermaid.parseError = function(err, hash) {
         // ignore error
       };
-
-      // initialize source editor
-      const sourceTextarea = document.getElementById('source-textarea');
-      sourceTextarea.value = source;
-      const sourceEditor = CodeMirror.fromTextArea(sourceTextarea, {
-          lineNumbers: true,
-          autoRefresh:true,
-          mode: 'mermaid'
-      });
-      sourceEditor.on('change', function(doc, changeObj) {
-        source = doc.getValue();
-        renderDiagram(source);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.js"></script>
+    <script src="./lib/monaco-mermaid.js"></script>
+    <script>
+      var sourceEditor;
+      var configurationEditor;
+      var sourceEditorSession;
+      var configurationEditorSession;
+      require.config({ 
+        paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' },
       });
 
-      // initialize configuration editor
-      const configurationTextarea = document.getElementById('configuration-textarea');
-      configurationTextarea.value = JSON.stringify(configuration, null, 2);
-      const configurationEditor = CodeMirror.fromTextArea(configurationTextarea, {
-          lineNumbers: true,
-          autoRefresh:true,
-          mode: 'application/json'
-      });
-      configurationEditor.on('change', function(doc, changeObj) {
-        const text = doc.getValue();
-        try {
-          configuration = JSON.parse(text);
-        } catch (e) {
-          // ignore error
-          return;
-        }
-        setConfiguration(configuration);
-        renderDiagram(source);
+      require(['vs/editor/editor.main'], function() {
+        // initialize source editor
+        registerMermaidLanguage(monaco);
+        sourceEditorSession = monaco.editor.createModel(source, 'mermaid');
+        sourceEditor = monaco.editor.create(document.getElementById('source-editor-container'), {
+          automaticLayout: true,
+          theme: 'mermaid',
+        });
+        sourceEditor.setModel(sourceEditorSession);
+        sourceEditor.onDidChangeModelContent(e => {
+          const sourceeText = sourceEditor.getModel().getValue();
+          renderDiagram(sourceeText);
+        });
+
+        // initialize configuration editor
+        configurationEditorSession = monaco.editor.createModel(JSON.stringify(configuration, null, 2), 'json');
+        configurationEditor = monaco.editor.create(document.getElementById('configuration-editor-container'), {
+          automaticLayout: true
+        });
+        configurationEditor.setModel(configurationEditorSession);
+        configurationEditor.onDidChangeModelContent(e => {
+          const sourceText = sourceEditor.getModel().getValue();
+          const configurationText = configurationEditor.getModel().getValue();
+          try {
+            configuration = JSON.parse(configurationText);
+          } catch (e) {
+            // ignore error
+            return;
+          }
+          setConfiguration(configuration);
+          renderDiagram(sourceText);
+        });
       });
     </script>
   </body>
