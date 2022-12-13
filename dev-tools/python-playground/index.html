@@ -90,19 +90,8 @@
     <script src="https://cdn.jsdelivr.net/npm/brython@3.9.4/brython.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/brython@3.9.4/brython_stdlib.js" integrity="sha256-Q8Hm3ww/67P+BxiK5wTm3EmgO/4YZ088HtRHxpiXagk=" crossorigin="anonymous"></script>
     <script>
-      function xhr(url) {
-        return $.ajax({
-          type: 'GET',
-          url: url,
-          dataType: 'text',
-          async : false,
-          success: function(response) {
-              return response;
-          },
-          error: function(response) {
-              return response;
-          }
-        }).responseText;
+      async function xhr(url) {
+        return await fetch(url);
       }
     </script>
     <script>

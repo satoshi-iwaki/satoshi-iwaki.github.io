@@ -98,19 +98,8 @@
     <script src="../common/lib/emoji/twitter-emoji.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
-      function xhr(url) {
-        return $.ajax({
-          type: 'GET',
-          url: url,
-          dataType: 'text',
-          async : false,
-          success: (response) => {
-              return response;
-          },
-          error: (response) => {
-              return response;
-          }
-        }).responseText;
+      async function xhr(url) {
+        return await fetch(url);
       }
     </script>
     <script>
