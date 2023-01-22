@@ -60,9 +60,20 @@
     <script src="../common/lib/highlight.js/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
-      async function xhr(url) {
-        return await fetch(url);
-      }
+      function xhr(url) {
+        return $.ajax({
+          type: 'GET',
+          url: url,
+          dataType: 'text',
+          async : false,
+          success: function(response) {
+              return response;
+          },
+          error: function(response) {
+              return response;
+          }
+        }).responseText;
+      };
     </script>
     <script>
       // https://github.com/github/gemoji/blob/master/db/emoji.json

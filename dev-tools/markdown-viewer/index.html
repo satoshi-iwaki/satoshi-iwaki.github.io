@@ -98,9 +98,20 @@
     <script src="../common/lib/emoji/twitter-emoji.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script>
-      async function xhr(url) {
-        return await fetch(url);
-      }
+      function xhr(url) {
+        return $.ajax({
+          type: 'GET',
+          url: url,
+          dataType: 'text',
+          async : false,
+          success: function(response) {
+              return response;
+          },
+          error: function(response) {
+              return response;
+          }
+        }).responseText;
+      };
     </script>
     <script>
       var sample = 'https://iwaki.info/dev-tools/markdown-viewer/sample.md';
