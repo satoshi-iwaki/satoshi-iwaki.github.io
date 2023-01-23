@@ -163,7 +163,7 @@
 
       // initialize source editor
       // JSON to YAML
-      var jsonEditor = CodeMirror(document.getElementById('json-editor-container'), {
+      const jsonEditor = CodeMirror(document.getElementById('json-editor-container'), {
         value: sourceJson,
         lineNumbers: true,
         autoRefresh: true,
@@ -173,10 +173,11 @@
         mode: 'javascript'
       });
       jsonEditor.on("change", function(instance, changeObj) {
-        source = instance.getValue();
+        let source = instance.getValue();
+        source = source.replace(/\n/g, '');
         covertToYaml(source)
       });
-      var yamlPreview = CodeMirror(document.getElementById('yaml-preview-container'), {
+      const yamlPreview = CodeMirror(document.getElementById('yaml-preview-container'), {
         value: sourceYaml,
         lineNumbers: true,
         autoRefresh: true,
@@ -186,7 +187,7 @@
       });
 
       // YAML to JSON
-      var yamlEditor = CodeMirror(document.getElementById('yaml-editor-container'), {
+      const yamlEditor = CodeMirror(document.getElementById('yaml-editor-container'), {
         value: sourceYaml,
         lineNumbers: true,
         autoRefresh: true,
@@ -199,7 +200,7 @@
         source = instance.getValue();
         covertToJson(source)
       });
-      var jsonPreview = CodeMirror(document.getElementById('json-preview-container'), {
+      const jsonPreview = CodeMirror(document.getElementById('json-preview-container'), {
         value: sourceJson,
         lineNumbers: true,
         autoRefresh: true,
@@ -209,7 +210,7 @@
       });
 
       // JSON to JSON
-      var jsonToJsonEditor = CodeMirror(document.getElementById('json-to-json-editor-container'), {
+      const jsonToJsonEditor = CodeMirror(document.getElementById('json-to-json-editor-container'), {
         value: sourceJson,
         lineNumbers: true,
         autoRefresh: true,
@@ -219,12 +220,13 @@
         mode: 'javascript'
       });
       jsonToJsonEditor.on("change", function(instance, changeObj) {
-        source = instance.getValue();
-        let object = JSON.parse(source)
-        let json = JSON.stringify(object, null, 2)
+        let source = instance.getValue();
+        source = source.replace(/\n/g, '');
+        const object = JSON.parse(source)
+        const json = JSON.stringify(object, null, 2)
         jsonToJsonPreview.setValue(json)
       });
-      var jsonToJsonPreview = CodeMirror(document.getElementById('json-to-json-preview-container'), {
+      const jsonToJsonPreview = CodeMirror(document.getElementById('json-to-json-preview-container'), {
         value: sourceJson,
         lineNumbers: true,
         autoRefresh: true,
@@ -234,7 +236,7 @@
       });
 
       // YAML to YAML
-      var yamlToYamlEditor = CodeMirror(document.getElementById('yaml-to-yaml-editor-container'), {
+      const yamlToYamlEditor = CodeMirror(document.getElementById('yaml-to-yaml-editor-container'), {
         value: sourceYaml,
         lineNumbers: true,
         autoRefresh: true,
@@ -244,12 +246,12 @@
         mode: 'yaml'
       });
       yamlToYamlEditor.on("change", function(instance, changeObj) {
-        source = instance.getValue();
-        let object = jsyaml.safeLoad(source)
-        let yaml = jsyaml.dump(object)
+        let source = instance.getValue();
+        const object = jsyaml.safeLoad(source)
+        const yaml = jsyaml.dump(object)
         yamlToYamlPreview.setValue(yaml)
       });
-      var yamlToYamlPreview = CodeMirror(document.getElementById('yaml-to-yaml-preview-container'), {
+      const yamlToYamlPreview = CodeMirror(document.getElementById('yaml-to-yaml-preview-container'), {
         value: sourceYaml,
         lineNumbers: true,
         autoRefresh: true,
@@ -259,14 +261,14 @@
       });
 
       function covertToYaml(json) {
-        let object = JSON.parse(json)
-        let yaml = jsyaml.dump(object)
+        const object = JSON.parse(json)
+        const yaml = jsyaml.dump(object)
         yamlPreview.setValue(yaml)
       }
 
       function covertToJson(yaml) {
-        let object = jsyaml.safeLoad(yaml)
-        let json = JSON.stringify(object, null, 2)
+        const object = jsyaml.safeLoad(yaml)
+        const json = JSON.stringify(object, null, 2)
         jsonPreview.setValue(json)
       }
     </script>
