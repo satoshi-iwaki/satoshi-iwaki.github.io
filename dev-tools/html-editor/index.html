@@ -110,11 +110,10 @@
       };
     </script>
     <script>
-      var source = xhr('example.html')
-
-      var preview = document.getElementById('preview')
+      let source = xhr('example.html')
+      const preview = document.getElementById('preview')
       // initialize source editor
-      var sourceEditor = CodeMirror(document.getElementById('editor-container'), {
+      const sourceEditor = CodeMirror(document.getElementById('editor-container'), {
         value: source,
         lineNumbers: true,
         autoRefresh: true,
@@ -145,9 +144,9 @@
 
       function exportHtml() {
         try {
-          let html = source;
-          var blob = new Blob([html], {'type': 'text/html'});
-          var url = window.URL.createObjectURL(blob);
+          const html = source;
+          const blob = new Blob([html], {'type': 'text/html'});
+          const url = window.URL.createObjectURL(blob);
           document.getElementById('exportHtml').href = url;
         } catch(e) {
           console.log(`Error: ${e}`)

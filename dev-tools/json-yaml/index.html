@@ -141,7 +141,7 @@
       };
     </script>
     <script>
-      var sample = {
+      const sample = {
         feed: {
           title: 'Sample'
         },
@@ -158,8 +158,8 @@
           }
         ]
       }
-      var sourceJson = JSON.stringify(sample, null, 2)
-      var sourceYaml = jsyaml.dump(sample)
+      let sourceJson = JSON.stringify(sample, null, 2)
+      let sourceYaml = jsyaml.dump(sample)
 
       // initialize source editor
       // JSON to YAML

@@ -63,7 +63,7 @@
       String.prototype.replaceAll = function(searchValue, replaceValue) {
         return this.split(searchValue).join(replaceValue);
       };
-      var Base64 = {
+      const Base64 = {
         encode: function(plainText) {
           return btoa(unescape(encodeURIComponent(plainText)));
         },
@@ -72,13 +72,13 @@
         }
       };
       function base64Encode() {
-        var input = document.getElementById('base64-encoder-input').value;
+        const input = document.getElementById('base64-encoder-input').value;
         if (input.length == 0) {
           return
         }
         try {
-          var value = Base64.encode(input);
-          var urlEncode = document.getElementById('url-encode').checked;
+          let value = Base64.encode(input);
+          const urlEncode = document.getElementById('url-encode').checked;
           if (urlEncode) {
             value = value.replaceAll('+', '-').replaceAll('/', '_');
           }
@@ -88,16 +88,16 @@
         }
       }
       function base64Dencode() {
-        var input = document.getElementById('base64-decoder-input').value;
+        let input = document.getElementById('base64-decoder-input').value;
         if (input.length == 0) {
           return
         }
-        var urlDecode = document.getElementById('url-decode').checked;
+        const urlDecode = document.getElementById('url-decode').checked;
         if (urlDecode) {
           input = input.replaceAll('-', '+').replaceAll('_', '/');
         }
         try {
-          var value = Base64.decode(input);
+          const value = Base64.decode(input);
           document.getElementById('base64-decoder-output').value = value
         } catch (error) {
           alert('Faild to Base64 decode.\n' + error);

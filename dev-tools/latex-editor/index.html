@@ -131,9 +131,9 @@ m = \\frac{m_0}{\\sqrt{1-\\frac{v^2}{c^2}}}
 $$
 \\end{document}`
 
-      var preview = document.getElementById('preview')
+      let preview = document.getElementById('preview')
       // initialize source editor
-      var sourceEditor = CodeMirror(document.getElementById('editor-container'), {
+      const sourceEditor = CodeMirror(document.getElementById('editor-container'), {
         value: source,
         lineNumbers: true,
         autoRefresh: true,
@@ -148,11 +148,11 @@ $$
       });
 
       function renderLatex() {
-        let htmlGenerator = new latexjs.HtmlGenerator({ hyphenate: false })
+        const htmlGenerator = new latexjs.HtmlGenerator({ hyphenate: false })
         try {
-          let generator = latexjs.parse(source, { generator: htmlGenerator })
-          let htmlDocument = generator.htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/.');
-          let html = htmlDocument.documentElement.outerHTML;
+          const generator = latexjs.parse(source, { generator: htmlGenerator })
+          const htmlDocument = generator.htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/.');
+          const html = htmlDocument.documentElement.outerHTML;
           preview.srcdoc = html;
         } catch(e) {
           console.log(`Error: ${e}`)
@@ -165,13 +165,13 @@ $$
       });
 
       function exportHtml() {
-        let htmlGenerator = new latexjs.HtmlGenerator({ hyphenate: false })
+        const htmlGenerator = new latexjs.HtmlGenerator({ hyphenate: false })
         try {
-          let generator = latexjs.parse(source, { generator: htmlGenerator })
-          let htmlDocument = generator.htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/.');
-          let html = htmlDocument.documentElement.outerHTML;
-          var blob = new Blob([html], {'type': 'text/html'});
-          var url = window.URL.createObjectURL(blob);
+          const generator = latexjs.parse(source, { generator: htmlGenerator })
+          const htmlDocument = generator.htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/.');
+          const html = htmlDocument.documentElement.outerHTML;
+          const blob = new Blob([html], {'type': 'text/html'});
+          const url = window.URL.createObjectURL(blob);
           document.getElementById('exportHtml').href = url;
         } catch(e) {
           console.log(`Error: ${e}`)

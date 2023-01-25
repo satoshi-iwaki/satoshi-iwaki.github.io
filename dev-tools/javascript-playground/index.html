@@ -104,14 +104,14 @@
       };
     </script>
     <script>
-      var sampleJavascript = `var items = ["hello", "javascript"];
+      const sampleJavascript = `var items = ["hello", "javascript"];
 var message = items.join(" ");
 console.log(message);
 `;
-      var inputJavascript = sampleJavascript
+      let inputJavascript = sampleJavascript
 
       // initialize source editor
-      var scriptEditor = CodeMirror(document.getElementById('input-script-container'), {
+      const scriptEditor = CodeMirror(document.getElementById('input-script-container'), {
         value: sampleJavascript,
         lineNumbers: true,
         autoRefresh: true,
@@ -124,7 +124,7 @@ console.log(message);
         inputJavascript = instance.getValue();
       });
 
-      var output = CodeMirror(document.getElementById('output-console-container'), {
+      const output = CodeMirror(document.getElementById('output-console-container'), {
         value: "",
         lineNumbers: true,
         autoRefresh: true,
@@ -134,8 +134,8 @@ console.log(message);
       });
 
       consoleUtils.writeOutput = function(content) {
-        var outputContent = output.getValue();
-        var newLogItem = '> ' + content + '\n';
+        const outputContent = output.getValue();
+        const newLogItem = '> ' + content + '\n';
         output.setValue(outputContent + newLogItem);
       }
 

@@ -102,7 +102,7 @@
         return this.split(searchValue).join(replaceValue);
       };
 
-      var Base64 = {
+      const Base64 = {
         encode: function(plainText) {
           return btoa(unescape(encodeURIComponent(plainText)));
         },
@@ -135,7 +135,7 @@
       }
 
       function convertBase64StringToArrayBuffer(base64) {
-        let binary = atob(base64);
+        const binary = atob(base64);
         let bytes = new Uint8Array(binary.length);
         for (let i = 0; i < binary.length; i++) {
           bytes[i] = binary.charCodeAt(i);
@@ -144,22 +144,22 @@
       }
 
       function convertArrayBufferToBase64String(buffer) {
-        let base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+        const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
         return base64;
       }
 
       function convertBase64UrlStringToArrayBuffer(base64Url) {
-        let base64 = base64Url.replaceAll('-', '+').replaceAll('_', '/')
+        const base64 = base64Url.replaceAll('-', '+').replaceAll('_', '/')
         return convertBase64StringToArrayBuffer(base64)
       }
 
       function convertArrayBufferToBase64UrlString(buffer) {
-        let base64 = convertArrayBufferToBase64String(buffer);
+        const base64 = convertArrayBufferToBase64String(buffer);
         return base64.replaceAll('+', '-').replaceAll('/', '_');
       }
 
       function convertPemToBinary(pem) {
-        let lines = pem.split('\n');
+        const lines = pem.split('\n');
         let encoded = '';
         for (var i = 0; i < lines.length; i++) {
             if (lines[i].trim().length > 0 &&
@@ -178,7 +178,7 @@
       }
 
       function convertBinaryToPem(header, footer, arrayBuffer) {
-        let base64 = convertArrayBufferToBase64String(arrayBuffer)
+        const base64 = convertArrayBufferToBase64String(arrayBuffer)
         let lines = []
         lines.push(header);
         while (base64.length > 0) {

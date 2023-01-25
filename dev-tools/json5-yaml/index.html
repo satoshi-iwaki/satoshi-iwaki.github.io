@@ -142,7 +142,7 @@
       };
     </script>
     <script>
-      var sample = {
+      const sample = {
         feed: {
           title: 'Sample'
         },
@@ -159,7 +159,7 @@
           }
         ]
       }
-      var sampleJson5 = `{
+      const sampleJson5 = `{
   // comments
   unquoted: 'and you can quote me on that',
   singleQuotes: 'I can use "double quotes" here',
@@ -171,8 +171,8 @@ No \\n's!",
   trailingComma: 'in objects', andIn: ['arrays',],
   "backwardsCompatible": "with JSON",
 }
-      `
-      var sampleYaml = `unquoted: and you can quote me on that
+`
+      const sampleYaml = `unquoted: and you can quote me on that
 singleQuotes: I can use "double quotes" here
 lineBreaks: |-
   Look, Mom! No 
@@ -186,12 +186,12 @@ andIn:
   - arrays
 backwardsCompatible: with JSON
 `
-      var sourceJson = sampleJson5
-      var sourceYaml = sampleYaml
+      let sourceJson = sampleJson5
+      let sourceYaml = sampleYaml
 
       // initialize source editor
       // JSON5 to YAML
-      var jsonEditor = CodeMirror(document.getElementById('json-editor-container'), {
+      const jsonEditor = CodeMirror(document.getElementById('json-editor-container'), {
         value: sourceJson,
         lineNumbers: true,
         autoRefresh: true,
@@ -204,7 +204,7 @@ backwardsCompatible: with JSON
         source = instance.getValue();
         covertToYaml(source)
       });
-      var yamlPreview = CodeMirror(document.getElementById('yaml-preview-container'), {
+      const yamlPreview = CodeMirror(document.getElementById('yaml-preview-container'), {
         value: sourceYaml,
         lineNumbers: true,
         autoRefresh: true,
@@ -214,7 +214,7 @@ backwardsCompatible: with JSON
       });
 
       // YAML to JSON5
-      var yamlEditor = CodeMirror(document.getElementById('yaml-editor-container'), {
+      const yamlEditor = CodeMirror(document.getElementById('yaml-editor-container'), {
         value: sourceYaml,
         lineNumbers: true,
         autoRefresh: true,
@@ -227,7 +227,7 @@ backwardsCompatible: with JSON
         source = instance.getValue();
         covertToJson(source)
       });
-      var jsonPreview = CodeMirror(document.getElementById('json-preview-container'), {
+      const jsonPreview = CodeMirror(document.getElementById('json-preview-container'), {
         value: sourceJson,
         lineNumbers: true,
         autoRefresh: true,
@@ -237,7 +237,7 @@ backwardsCompatible: with JSON
       });
 
       // JSON5 to JSON5
-      var jsonToJsonEditor = CodeMirror(document.getElementById('json-to-json-editor-container'), {
+      const jsonToJsonEditor = CodeMirror(document.getElementById('json-to-json-editor-container'), {
         value: sourceJson,
         lineNumbers: true,
         autoRefresh: true,
@@ -252,7 +252,7 @@ backwardsCompatible: with JSON
         let json = JSON5.stringify(object, null, 2)
         jsonToJsonPreview.setValue(json)
       });
-      var jsonToJsonPreview = CodeMirror(document.getElementById('json-to-json-preview-container'), {
+      const jsonToJsonPreview = CodeMirror(document.getElementById('json-to-json-preview-container'), {
         value: sourceJson,
         lineNumbers: true,
         autoRefresh: true,
@@ -262,7 +262,7 @@ backwardsCompatible: with JSON
       });
 
       // YAML to YAML
-      var yamlToYamlEditor = CodeMirror(document.getElementById('yaml-to-yaml-editor-container'), {
+      const yamlToYamlEditor = CodeMirror(document.getElementById('yaml-to-yaml-editor-container'), {
         value: sourceYaml,
         lineNumbers: true,
         autoRefresh: true,
@@ -277,7 +277,7 @@ backwardsCompatible: with JSON
         let yaml = jsyaml.dump(object)
         yamlToYamlPreview.setValue(yaml)
       });
-      var yamlToYamlPreview = CodeMirror(document.getElementById('yaml-to-yaml-preview-container'), {
+      const yamlToYamlPreview = CodeMirror(document.getElementById('yaml-to-yaml-preview-container'), {
         value: sourceYaml,
         lineNumbers: true,
         autoRefresh: true,

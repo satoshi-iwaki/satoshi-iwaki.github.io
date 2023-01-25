@@ -136,7 +136,7 @@
     </div>
     <script>
       function convertBase64StringToArrayBuffer(base64) {
-        let binary = atob(base64);
+        const binary = atob(base64);
         let bytes = new Uint8Array(binary.length);
         for (let i = 0; i < binary.length; i++) {
           bytes[i] = binary.charCodeAt(i);
@@ -145,31 +145,31 @@
       }
 
       function convertArrayBufferToBase64String(buffer) {
-        let base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+        const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
         return base64;
       }
 
       function convertPemToBinary(pem) {
-        let lines = pem.split('\n');
+        const lines = pem.split('\n');
         let encoded = '';
-        for (var i = 0; i < lines.length; i++) {
-            if (lines[i].trim().length > 0 &&
-                lines[i].indexOf('-----BEGIN RSA PRIVATE KEY-----') < 0 &&
-                lines[i].indexOf('-----BEGIN RSA PUBLIC KEY-----') < 0 &&
-                lines[i].indexOf('-----BEGIN PUBLIC KEY-----') < 0 &&
-                lines[i].indexOf('-----END PUBLIC KEY-----') < 0 &&
-                lines[i].indexOf('-----BEGIN PRIVATE KEY-----') < 0 &&
-                lines[i].indexOf('-----END PRIVATE KEY-----') < 0 &&
-                lines[i].indexOf('-----END RSA PRIVATE KEY-----') < 0 &&
-                lines[i].indexOf('-----END RSA PUBLIC KEY-----') < 0) {
-                encoded += lines[i].trim();
-            }
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].trim().length > 0 &&
+            lines[i].indexOf('-----BEGIN RSA PRIVATE KEY-----') < 0 &&
+            lines[i].indexOf('-----BEGIN RSA PUBLIC KEY-----') < 0 &&
+            lines[i].indexOf('-----BEGIN PUBLIC KEY-----') < 0 &&
+            lines[i].indexOf('-----END PUBLIC KEY-----') < 0 &&
+            lines[i].indexOf('-----BEGIN PRIVATE KEY-----') < 0 &&
+            lines[i].indexOf('-----END PRIVATE KEY-----') < 0 &&
+            lines[i].indexOf('-----END RSA PRIVATE KEY-----') < 0 &&
+            lines[i].indexOf('-----END RSA PUBLIC KEY-----') < 0) {
+            encoded += lines[i].trim();
+          }
         }
         return convertBase64StringToArrayBuffer(encoded);
       }
 
       function convertBinaryToPem(header, footer, arrayBuffer) {
-        let base64 = convertArrayBufferToBase64String(arrayBuffer)
+        const base64 = convertArrayBufferToBase64String(arrayBuffer)
         let lines = []
         lines.push(header);
         while (base64.length > 0) {
@@ -181,10 +181,10 @@
       }
 
       function convertePemToJwk() {
-        let algorithm = document.getElementById('pem-to-jwk-converter-input-algorithm').value
-        let hash = document.getElementById('pem-to-jwk-converter-input-hash').value
-        let pemPublicKey = document.getElementById('pem-to-jwk-converter-input-public-key').value
-        let publicKeyData = convertPemToBinary(pemPublicKey);
+        const algorithm = document.getElementById('pem-to-jwk-converter-input-algorithm').value
+        const hash = document.getElementById('pem-to-jwk-converter-input-hash').value
+        const pemPublicKey = document.getElementById('pem-to-jwk-converter-input-public-key').value
+        const publicKeyData = convertPemToBinary(pemPublicKey);
         window.crypto.subtle.importKey(
           'spki',
           publicKeyData,
@@ -209,8 +209,8 @@
           alert(`Error: ${err}`);
         });
 
-        let pemPrivateKey = document.getElementById('pem-to-jwk-converter-input-private-key').value
-        let privateKeyData = convertPemToBinary(pemPrivateKey);
+        const pemPrivateKey = document.getElementById('pem-to-jwk-converter-input-private-key').value
+        const privateKeyData = convertPemToBinary(pemPrivateKey);
         window.crypto.subtle.importKey(
           'pkcs8',
           privateKeyData,
@@ -237,11 +237,11 @@
       }
 
       function converteJwkToPem() {
-        let algorithm = document.getElementById('jwk-to-pem-converter-input-algorithm').value
-        let hash = document.getElementById('jwk-to-pem-converter-input-hash').value
-        let jwkPublicKey = document.getElementById('jwk-to-pem-converter-input-public-key').value;
+        const algorithm = document.getElementById('jwk-to-pem-converter-input-algorithm').value
+        const hash = document.getElementById('jwk-to-pem-converter-input-hash').value
+        const jwkPublicKey = document.getElementById('jwk-to-pem-converter-input-public-key').value;
         if (jwkPublicKey && jwkPublicKey.length > 0) {
-          let publicKeyData = JSON.parse(jwkPublicKey);
+          const publicKeyData = JSON.parse(jwkPublicKey);
           window.crypto.subtle.importKey(
             'jwk',
             publicKeyData,
@@ -257,7 +257,7 @@
                 'spki',
                 publicKey
               ).then(function(keydata) {
-                let pem = convertBinaryToPem('-----BEGIN PUBLIC KEY-----', '-----END PUBLIC KEY-----', keydata)
+                const pem = convertBinaryToPem('-----BEGIN PUBLIC KEY-----', '-----END PUBLIC KEY-----', keydata)
                 document.getElementById('jwk-to-pem-converter-output-public-key').value = pem;
               }).catch(function(err) {
                 alert(`Error: ${err}`);
@@ -268,9 +268,9 @@
           });
         }
 
-        let jwkPrivateKey = document.getElementById('jwk-to-pem-converter-input-private-key').value
+        const jwkPrivateKey = document.getElementById('jwk-to-pem-converter-input-private-key').value
         if (jwkPrivateKey && jwkPrivateKey.length > 0) {
-          let privateKeyData = JSON.parse(jwkPrivateKey);
+          const privateKeyData = JSON.parse(jwkPrivateKey);
           window.crypto.subtle.importKey(
             'jwk',
             privateKeyData,
@@ -285,7 +285,7 @@
                 'pkcs8',
                 privateKey
               ).then(function(keydata) {
-                let pem = convertBinaryToPem('-----BEGIN PRIVATE KEY-----', '-----END PRIVATE KEY-----', keydata)
+                const pem = convertBinaryToPem('-----BEGIN PRIVATE KEY-----', '-----END PRIVATE KEY-----', keydata)
                 document.getElementById('jwk-to-pem-converter-output-private-key').value = pem;
               }).catch(function(err) {
                 alert(`Error: ${err}`);
@@ -298,9 +298,9 @@
       }
 
       function generateKey() {
-        let format = 'jwk';
-        let algorithm = document.getElementById('key-generator-input-algorithm').value
-        let hash = document.getElementById('key-generator-input-hash').value
+        const format = 'jwk';
+        const algorithm = document.getElementById('key-generator-input-algorithm').value
+        const hash = document.getElementById('key-generator-input-hash').value
         window.crypto.subtle.generateKey(
           {
               name: algorithm,
@@ -333,7 +333,7 @@
             'spki',
             key.publicKey
           ).then(function(keydata) {
-            let pem = convertBinaryToPem('-----BEGIN PUBLIC KEY-----', '-----END PUBLIC KEY-----', keydata)
+            const pem = convertBinaryToPem('-----BEGIN PUBLIC KEY-----', '-----END PUBLIC KEY-----', keydata)
             document.getElementById('key-generator-output-pem-public-key').value = pem;
           }).catch(function(err) {
             alert(`Error: ${err}`);
@@ -342,7 +342,7 @@
             'pkcs8',
             key.privateKey
           ).then(function(keydata) {
-            let pem = convertBinaryToPem('-----BEGIN PRIVATE KEY-----', '-----END PRIVATE KEY-----', keydata)
+            const pem = convertBinaryToPem('-----BEGIN PRIVATE KEY-----', '-----END PRIVATE KEY-----', keydata)
             document.getElementById('key-generator-output-pem-private-key').value = pem;
           }).catch(function(err) {
             alert(`Error: ${err}`);
