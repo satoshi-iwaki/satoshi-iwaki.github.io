@@ -20,7 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/addon/mode/simple.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/mode/javascript/javascript.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/addon/display/autorefresh.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.2.2/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js"></script>
     <script src="../common/lib/codemirror/mode/mermaid.js"></script>
     <style>
       .CodeMirror {
@@ -143,19 +143,10 @@
 
       const id = 'diagramSvg';
       const diagram = document.getElementById('diagram');
-      function insertSvg(svgCode, bindFunctions) {
-        diagram.innerHTML = svgCode;
-        if (typeof callback !== 'undefined') {
-          callback(id);
-        }
-        if (bindFunctions) {
-          bindFunctions(diagram);
-        }
-      };
-
-      function renderDiagram(text) {
+      async function renderDiagram(text) {
         try {
-          mermaid.render(id, text, insertSvg, diagram);
+          const { svg } = await mermaid.render(id, text);
+          diagram.innerHTML = svg;
         } catch (e) {
           diagram.innerHTML = '<div>' + text + '</div>';
         }
