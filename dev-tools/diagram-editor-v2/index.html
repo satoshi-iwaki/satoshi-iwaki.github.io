@@ -71,7 +71,7 @@
                   <a class="btn btn-primary" id="export-diagram" role="button" href="#" download="diagram.svg" onclick="exportDiagram()">Export to SVG</a>
                 </div>
                 <div class="btn-group me-2" role="group">
-                  <a class="btn btn-primary" id="export-diagram-png" role="button" href="#" download="diagram.png" onclick="exportDiagramAsPng()">Export to PNG</a>
+                  <a class="btn btn-primary" id="export-diagram-png" role="button" onclick="exportDiagramAsPng()">Export to PNG</a>
                 </div>
               </div>
             </div>
@@ -158,20 +158,19 @@
           const viewBoxValues = viewBox.split(' ');
           const width = viewBoxValues[2] * 2;
           const height = viewBoxValues[3] * 2;
-
           const canvas = document.createElement('canvas');
           canvas.setAttribute('width', width);
           canvas.setAttribute('height', height);
           const context = canvas.getContext('2d')
           context.drawImage(image, 0, 0, width, height)
-          const url = canvas.toDataURL('image/png')
-
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `diagram.png`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          canvas.toBlob((blob) => {
+            const pngUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = pngUrl;
+            link.download = 'diagram.png';
+            link.click();
+            URL.revokeObjectURL(pngUrl);
+          }, 'image/png');
         });
         image.src = svgDataUrl;
       }
