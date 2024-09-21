@@ -48,15 +48,15 @@
             <textarea class="form-control" id="key-generator-output-private-key" rows="5" readonly></textarea>
           </div>
           <div class="mb-3">
-            <label for="key-generator-output">JWK Public key:</label>
+            <label for="key-generator-output-public-key">JWK Public key:</label>
             <textarea class="form-control" id="key-generator-output-public-key" rows="5" readonly></textarea>
           </div>
           <div class="mb-3">
-            <label for="key-generator-output-private-key">PEM Private key:</label>
+            <label for="key-generator-output-pem-private-key">PEM Private key:</label>
             <textarea class="form-control" id="key-generator-output-pem-private-key" rows="5" readonly></textarea>
           </div>
           <div class="mb-3">
-            <label for="key-generator-output">PEM Public key:</label>
+            <label for="key-generator-output-pem-public-key">PEM Public key:</label>
             <textarea class="form-control" id="key-generator-output-pem-public-key" rows="5" readonly></textarea>
           </div>
         </div>
@@ -169,7 +169,7 @@
       }
 
       function convertBinaryToPem(header, footer, arrayBuffer) {
-        const base64 = convertArrayBufferToBase64String(arrayBuffer)
+        let base64 = convertArrayBufferToBase64String(arrayBuffer)
         let lines = []
         lines.push(header);
         while (base64.length > 0) {
